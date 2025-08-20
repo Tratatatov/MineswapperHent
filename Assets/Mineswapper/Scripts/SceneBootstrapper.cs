@@ -4,7 +4,7 @@ namespace HentaiGame
     public class SceneBootstrapper : MonoBehaviour
     {
         [SerializeField] private PlayerMVC _playerMVC;
-
+        [SerializeField] private GameManager _gameManager;
         private void Awake()
         {
             Initialize();
@@ -12,7 +12,7 @@ namespace HentaiGame
 
         private void Initialize()
         {
-            // _playerMVC.Initialize(_gameManager.NumMines);
+            _playerMVC.Initialize(_gameManager.NumMines);
         }
 
     }

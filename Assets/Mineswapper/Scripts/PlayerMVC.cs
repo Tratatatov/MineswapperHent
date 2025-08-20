@@ -5,7 +5,7 @@ namespace HentaiGame
 {
     public class PlayerMVC : MonoBehaviour
     {
-        [SerializeField] private PlayerView _playerView;
+        [SerializeField] private CharacterText _playerView;
         [SerializeField] private PlayerStatsData _playerStats;
         [SerializeField] private CharacterView _characterView;
         public void Initialize(int flagsCount)
