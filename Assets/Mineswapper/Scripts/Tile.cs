@@ -1,142 +1,195 @@
 using System.Collections.Generic;
 using UnityEngine;
+
 namespace HentaiGame
 {
     [RequireComponent(typeof(SpriteRenderer))]
     public class Tile : MonoBehaviour
     {
-        [Header("Tile Sprites")]
-        [SerializeField] private List<Sprite> _unclickedTiles;
-        [SerializeField] private Sprite _unclickedTile;
-        [SerializeField] private Sprite _flaggedTile;
-        [SerializeField] private List<Sprite> _clickedTiles;
-        [SerializeField] private Sprite _mineTile;
-        [SerializeField] private Sprite _mineWrongTile;
-        [SerializeField] private Sprite _mineHitTile;
-        [SerializeField] private Sprite _backgroundTile;
-        [SerializeField] private SpriteRenderer _backgroundTileRenderer;
+        [SerializeField] private SpriteRenderer _backGroundSpriteRenderer;
+        public bool IsFlagged => _isFlagged;
 
-        [Header("GM set via code")]
-        public GameManager gameManager;
+        public bool CanBeClicked => _canBeClicked;
 
+        public bool IsMine => _isMine;
+
+        public int MineCount => _mineCount;
+
+        // public Board Board => _board;
+
+        private Sprite _backgroundTile;
+        private CharacterOnBoard _characterOnBoard;
+        private List<Sprite> _clickedTiles;
+        private List<Sprite> _unclickedTiles;
+        private Sprite _doorSprite;
+        private Sprite _flaggedTile;
+        private Sprite _mineHitTile;
+        private Sprite _mineTile;
+        private Sprite _mineWrongTile;
         private SpriteRenderer _spriteRenderer;
-        public bool flagged = false;
-        public bool active = true;
-        public bool isMine = false;
-        public int mineCount = 0;
+        private Sprite _unclickedTile;
+        private bool _isFlagged;
+        private bool _canBeClicked;
+        private bool _isMine;
+        private int _mineCount;
+        private Board _board;
 
 
-        void Awake()
+        public void Initialize(CharacterOnBoard characterOnBoard, TileSpritesData tileSpritesData, Board board)
         {
-            // This should always exist due to the RequireComponent helper.
             _spriteRenderer = GetComponent<SpriteRenderer>();
-            _backgroundTileRenderer.gameObject.SetActive(false);
-            SetRandomUnclickedTile();
+            _characterOnBoard = characterOnBoard;
+            _board = board;
+            _isMine = false;
+            _isFlagged = false;
+            _canBeClicked = true;
+            _unclickedTile = tileSpritesData.GetRandomUnclickedTile();
+            _mineHitTile = tileSpritesData.MineHitTile;
+            _mineTile = tileSpritesData.MineTile;
+            _mineWrongTile = tileSpritesData.MineWrongTile;
+            //_backgroundTile = tileSpritesData.BackgroundTiles;
+            _flaggedTile = tileSpritesData.FlaggedTile;
+            _unclickedTiles = tileSpritesData.UnclickedTiles;
+            _clickedTiles = tileSpritesData.ClickedTiles;
+            _backGroundSpriteRenderer.sprite = tileSpritesData.GetRandomBackgroundTile();
         }
 
-        private void SetRandomUnclickedTile()
+        public void SetMine(bool value)
         {
-            int randomIndex = Random.Range(0, _unclickedTiles.Count);
-            _spriteRenderer.sprite = _unclickedTiles[randomIndex];
+            _isMine = value;
         }
 
-        private void OnMouseOver()
+        public void SetActive(bool value)
         {
-            // If it hasn't already been pressed.
-            if (active)
-            {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    // If left click reveal the tile contents.
-                    ClickedTile();
-                }
-                else if (Input.GetMouseButtonDown(1))
-                {
-                    // If right click toggle flag on/off.
-                    flagged = !flagged;
-                    if (flagged)
-                    {
-                        _spriteRenderer.sprite = _flaggedTile;
-                    }
-                    else
-                    {
-                        _spriteRenderer.sprite = _unclickedTile;
-                    }
-                    _backgroundTileRenderer.gameObject.SetActive(true);
-                }
-            }
+            _canBeClicked = value;
+        }
+
+        public void Open()
+        {
+            if (!CanBeClicked || IsFlagged)
+                return;
+
+            _canBeClicked = false;
+
+            if (_isMine)
+                _spriteRenderer.sprite = _mineTile;
             else
-            {
-                // If you're pressing both mouse buttons.
-                if (Input.GetMouseButton(0) && Input.GetMouseButton(1))
-                {
-                    // Check for valid expansion.
-                    gameManager.ExpandIfFlagged(this);
-                }
-            }
+                _spriteRenderer.sprite = _clickedTiles[MineCount];
         }
 
-        public void ClickedTile()
+        // public void OnClick()
+        // {
+        //     _characterOnBoard.Activate(true);
+        //     _characterOnBoard.MoveTo(this);
+        //
+        //
+        //     // Ensure it can no longer be pressed again.
+        //     _canBeClicked = false;
+        //
+        //     if (_isMine)
+        //     {
+        //         // Game over :(
+        //         _spriteRenderer.sprite = _mineHitTile;
+        //         GameEvents.OnGameOver?.Invoke();
+        //     }
+        //     else
+        //     {
+        //         // It was a safe click, set the correct sprite.
+        //         _spriteRenderer.sprite = _clickedTiles[_mineCount];
+        //         _backGroundSpriteRenderer.enabled = true;
+        //         Debug.Log("Clicked tile");
+        //         //GameManager.ClickCross(this);
+        //         //GameManager.CheckGameOver();
+        //     }
+        // }
+
+        public void SetMineCount(int value)
         {
-            // Don't allow left clicks on flags.
-            if (active & !flagged)
-            {
-                // Ensure it can no longer be pressed again.
-                active = false;
-                if (isMine)
-                {
-                    // Game over :(
-                    _spriteRenderer.sprite = _mineHitTile;
-                    gameManager.PlayerMvc.TakeDamage(1);
-                    //gameManager.GameOver();
-                }
-                else
-                {
-                    // It was a safe click, set the correct sprite.
-                    _spriteRenderer.sprite = _clickedTiles[mineCount];
-                    if (mineCount == 0)
-                    {
-                        // Register that the click should expand out to the neighbours.
-                        gameManager.ClickNeighbours(this);
-                    }
-                    // Whenever we successfully make a change check for game over.
-                    gameManager.CheckGameOver();
-                }
-                _backgroundTileRenderer.gameObject.SetActive(true);
-            }
-
-
+            _mineCount = value;
         }
+
 
         // If this tile should be shown at game over, do so.
         public void ShowGameOverState()
         {
-            if (active)
+            if (_canBeClicked)
             {
-                active = false;
-                if (isMine & !flagged)
-                {
+                _canBeClicked = false;
+                if (_isMine & !_isFlagged)
                     // If mine and not flagged show mine.
                     _spriteRenderer.sprite = _mineTile;
-                }
-                else if (flagged & !isMine)
-                {
+                else if (_isFlagged & !_isMine)
                     // If flagged incorrectly show crossthrough mine
                     _spriteRenderer.sprite = _mineWrongTile;
-                }
-                _backgroundTileRenderer.gameObject.SetActive(true);
             }
         }
 
         // Helper function to flag remaning mines on game completion.
         public void SetFlaggedIfMine()
         {
-            if (isMine)
+            if (_isMine)
             {
-                flagged = true;
+                _isFlagged = true;
                 _spriteRenderer.sprite = _flaggedTile;
             }
         }
 
+        private void OnMouseOver()
+        {
+            // If it hasn't already been pressed.
+
+            if (Input.GetMouseButtonDown(0))
+                // If left click reveal the tile contents.
+                OnClick();
+            else if (Input.GetMouseButtonDown(1))
+                // If right click toggle flag on/off.
+                SetFlag();
+        }
+
+        private void SetFlag()
+        {
+            _isFlagged = !_isFlagged;
+            if (_isFlagged)
+                _spriteRenderer.sprite = _flaggedTile;
+            else
+                _spriteRenderer.sprite = _unclickedTile;
+        }
+
+
+        public void OpenRecursive()
+        {
+            if (!CanBeClicked || IsFlagged)
+                return;
+
+            Open();
+
+            // Если нет мин вокруг, открыть соседние тайлы рекурсивно
+            if (MineCount == 0 && !IsMine) _board.ClickNeighbours(this);
+        }
+
+        public void OnClick()
+        {
+            if (!CanBeClicked || IsFlagged)
+                return;
+
+            _characterOnBoard.Activate(true);
+            _characterOnBoard.MoveTo(this);
+
+            if (_isMine)
+            {
+                _spriteRenderer.sprite = _mineHitTile;
+                _canBeClicked = false;
+                GameEvents.OnGameOver?.Invoke();
+                _board.GameOver();
+            }
+            else
+            {
+                OpenRecursive();
+                _board.CheckGameOver();
+
+                // Если тайл уже открыт и имеет число > 0, можно расширить открытие соседей, если флаги стоят правильно
+                if (!CanBeClicked && MineCount > 0) _board.ExpandIfFlagged(this);
+            }
+        }
     }
 }

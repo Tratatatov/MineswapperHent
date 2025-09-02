@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7374986742022034973
 Transform:
   m_ObjectHideFlags: 0
@@ -39,7 +39,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4236041950784952253}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -232,32 +232,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6644852248339682795}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90de607065f149945b5033a5a22b224d, type: 3}
+  m_Script: {fileID: 11500000, guid: 83bb36be3be8b74478e431889732072e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unclickedTiles:
-  - {fileID: 5419679273236816069, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
-  - {fileID: -2962122377693789009, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
-  - {fileID: -2905035679319858871, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
-  _unclickedTile: {fileID: 5419679273236816069, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
-  _flaggedTile: {fileID: -921615692, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
-  _clickedTiles:
-  - {fileID: 0}
-  - {fileID: 1734013715764652076, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
-  - {fileID: -1754532199342389605, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
-  - {fileID: 350754815139252254, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
-  - {fileID: 7761228518361043641, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
-  - {fileID: 5589578823747298096, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
-  - {fileID: -8314221311146802935, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
-  - {fileID: 2318086852144391012, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
-  - {fileID: -4390095539675858545, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
-  _mineTile: {fileID: -1863692787, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
-  _mineWrongTile: {fileID: -110404460, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
-  _mineHitTile: {fileID: 1451885650, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
-  _backgroundTile: {fileID: 0}
-  _backgroundTileRenderer: {fileID: 7225403137115174805}
-  gameManager: {fileID: 0}
-  flagged: 0
-  active: 1
-  isMine: 0
-  mineCount: 0
+  _backGroundSpriteRenderer: {fileID: 7225403137115174805}

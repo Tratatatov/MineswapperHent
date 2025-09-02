@@ -1,7 +1,6 @@
 #if UNITY_2019_1_OR_NEWER
 using System;
 using System.Linq;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,16 +10,16 @@ namespace Utilities.BetterHierarchy
     {
         private class UIElementBuilder
         {
-            private VisualElement wrapper;
+            private readonly VisualElement wrapper;
 
             public UIElementBuilder(VisualElement wrapper)
             {
                 this.wrapper = wrapper;
             }
-            
+
             public VisualElement AddTooltip(string title, string tooltip)
             {
-                var tooltipWrapper = new VisualElement()
+                var tooltipWrapper = new VisualElement
                 {
                     tooltip = tooltip,
                     style =
@@ -61,15 +60,15 @@ namespace Utilities.BetterHierarchy
 
             public Label AddHeader(string text)
             {
-                var header = new Label()
+                var header = new Label
                 {
                     text = text,
                     style =
                     {
                         fontSize = 20,
                         marginBottom = 12,
-                        unityFontStyleAndWeight = FontStyle.Bold,
-                    },
+                        unityFontStyleAndWeight = FontStyle.Bold
+                    }
                 };
                 wrapper.Add(header);
 
@@ -82,11 +81,11 @@ namespace Utilities.BetterHierarchy
                 {
                     label = toggle.Label,
                     value = toggle.Get(),
-                    tooltip = info,
+                    tooltip = info
                 };
 
                 toggleElement.labelElement.style.minWidth = MIN_LABEL_WIDTH;
-                toggleElement.RegisterValueChangedCallback((changeEvt) => toggle.Set(changeEvt.newValue));
+                toggleElement.RegisterValueChangedCallback(changeEvt => toggle.Set(changeEvt.newValue));
 
                 wrapper.Add(toggleElement);
 
@@ -107,7 +106,7 @@ namespace Utilities.BetterHierarchy
                 };
 
                 selectionDropdown.labelElement.style.minWidth = MIN_LABEL_WIDTH;
-                selectionDropdown.RegisterValueChangedCallback((changeEvt) => selection.Set(changeEvt.newValue));
+                selectionDropdown.RegisterValueChangedCallback(changeEvt => selection.Set(changeEvt.newValue));
 
                 wrapper.Add(selectionDropdown);
 

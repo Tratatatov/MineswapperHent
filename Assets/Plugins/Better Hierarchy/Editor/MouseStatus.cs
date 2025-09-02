@@ -4,6 +4,9 @@ namespace Utilities.BetterHierarchy
 {
     public static class MouseStatus
     {
+        private static bool isMouseDown;
+        private static bool isMouseDragged;
+
         public static bool IsMouseDown
         {
             get
@@ -21,9 +24,6 @@ namespace Utilities.BetterHierarchy
                 return isMouseDragged;
             }
         }
-
-        private static bool isMouseDown;
-        private static bool isMouseDragged;
 
         public static void UpdateMouseEventState()
         {

@@ -1,7 +1,9 @@
-namespace SingularityGroup.HotReload.Editor {
-    enum ShowOnStartupEnum {
+namespace SingularityGroup.HotReload.Editor
+{
+    internal enum ShowOnStartupEnum
+    {
         Always,
         OnNewVersion,
-        Never,
+        Never
     }
 }

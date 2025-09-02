@@ -1,12 +1,15 @@
-namespace SingularityGroup.HotReload.Editor.Cli {
-    class StartArgs {
-        public string hotreloadTempDir;
+namespace SingularityGroup.HotReload.Editor.Cli
+{
+    internal class StartArgs
+    {
+        public string cliArguments;
+
         // aka method patch temp dir
         public string cliTempDir;
-        public string executableTargetDir;
-        public string executableSourceDir;
-        public string cliArguments;
-        public string unityProjDir;
         public bool createNoWindow;
+        public string executableSourceDir;
+        public string executableTargetDir;
+        public string hotreloadTempDir;
+        public string unityProjDir;
     }
 }

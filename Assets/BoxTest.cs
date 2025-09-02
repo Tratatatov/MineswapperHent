@@ -3,10 +3,10 @@ using UnityEngine;
 public class BoxTest : MonoBehaviour
 {
     [SerializeField] private Grid _grid;
-    private bool _isDragging;
     private Camera _camera;
+    private bool _isDragging;
 
-    void Start()
+    private void Start()
     {
         _camera = Camera.main;
     }
@@ -14,11 +14,10 @@ public class BoxTest : MonoBehaviour
     private void Update()
     {
         Vector2 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
-        Vector3Int newPosition = _grid.WorldToCell((Vector3)mousePosition);
+        var newPosition = _grid.WorldToCell(mousePosition);
         newPosition.z = 0;
         if (!_isDragging) return;
         transform.position = newPosition;
-
     }
 
     private void OnMouseDown()
@@ -30,5 +29,4 @@ public class BoxTest : MonoBehaviour
     {
         _isDragging = false;
     }
-
 }

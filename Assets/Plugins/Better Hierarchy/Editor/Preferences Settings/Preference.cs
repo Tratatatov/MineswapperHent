@@ -6,7 +6,10 @@ namespace Utilities.BetterHierarchy
 {
     public abstract class Preference<T>
     {
-        public event Action<T> OnValueChanged = delegate { };
+        private T cachedValue;
+        private bool isCached;
+
+        private string label = "";
 
         public string Label
         {
@@ -22,10 +25,7 @@ namespace Utilities.BetterHierarchy
 
         public T DefaultValue { get; set; }
         public string Key { get; set; }
-
-        private string label = "";
-        private T cachedValue;
-        private bool isCached;
+        public event Action<T> OnValueChanged = delegate { };
 
         public T Get()
         {
@@ -62,8 +62,8 @@ namespace Utilities.BetterHierarchy
             if (string.IsNullOrEmpty(input))
                 return input;
 
-            string[] words = Regex.Split(input, @"(?<!^)(?=[A-Z])");
-            string result = string.Join(" ", words);
+            var words = Regex.Split(input, @"(?<!^)(?=[A-Z])");
+            var result = string.Join(" ", words);
             result = char.ToUpper(result[0]) + result.Substring(1);
 
             return result;

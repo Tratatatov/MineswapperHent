@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 271c370a00ee3a542891fd94c9f061b5, type: 3}
+  m_Name: "\u0421\u043F\u0440\u0430\u0439\u0442\u044B \u041F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0430"
+  m_EditorClassIdentifier: 
+  BodyBaseSprite: {fileID: 21300000, guid: 3a10b81a82571134abd934fed855ab55, type: 3}
+  NewOutfitSprite: {fileID: 21300000, guid: 2175e2bf506c9b94cbce76e3c506cfe9, type: 3}
+  LightDestroyOutfitSprite: {fileID: 21300000, guid: 5a8b459c9f005684098d73ea57323b94, type: 3}
+  MiddleDestroyOutfitSprite: {fileID: 21300000, guid: 2f319fc36cac720488976931449fd8bf, type: 3}
+  StrongDestroyOutfitSprite: {fileID: 0}
+  NormalFaceSprite: {fileID: 21300000, guid: 0ba0a634476cc0545a9fd25e4ac21407, type: 3}
+  AngryFaceSprite: {fileID: 21300000, guid: d34694ed1e12be844b2a3f153cbe717c, type: 3}
+  HornyFaceSprite: {fileID: 21300000, guid: 7218b4bf8e16cba4292802184780bd05, type: 3}
+  SmallBrusesSprite: {fileID: 21300000, guid: b9d958920b2f9084092abe25a5a7cac6, type: 3}
+  SmallIconSprite: {fileID: 7651916056832062345, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
+  DefeatScene: {fileID: 0}
+  WinScene: {fileID: 0}
