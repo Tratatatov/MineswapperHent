@@ -47,7 +47,7 @@ namespace HentaiGame
             _mineHitTile = tileSpritesData.MineHitTile;
             _mineTile = tileSpritesData.MineTile;
             _mineWrongTile = tileSpritesData.MineWrongTile;
-            //_backgroundTile = tileSpritesData.BackgroundTiles;
+            //_backgrou3ndTile = tileSpritesData.BackgroundTiles;
             _flaggedTile = tileSpritesData.FlaggedTile;
             _unclickedTiles = tileSpritesData.UnclickedTiles;
             _clickedTiles = tileSpritesData.ClickedTiles;
@@ -74,7 +74,10 @@ namespace HentaiGame
             if (_isMine)
                 _spriteRenderer.sprite = _mineTile;
             else
+            {
                 _spriteRenderer.sprite = _clickedTiles[MineCount];
+                _backGroundSpriteRenderer.enabled = true;
+            }
         }
 
         // public void OnClick()

@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4911af14f795e484a8682052d5476d7c, type: 3}
-  m_Name: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0434\u043E\u0441\u043A\u0438"
+  m_Name: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0434\u043E\u0441\u043A\u0438
+    1"
   m_EditorClassIdentifier: 
-  _width: 15
-  _height: 15
+  _width: 20
+  _height: 20
   _numMines: 20

@@ -31,15 +31,15 @@ namespace HentaiGame
         public void CreateGameBoard(int width, int height, int numMines)
         {
             // Create the array of tiles.
-            for (var row = 0; row < height; row++)
-            for (var col = 0; col < width; col++)
+            for (int row = 0; row < height; row++)
+            for (int col = 0; col < width; col++)
             {
                 // Position the tile in the correct place (centred).
-                var newTile = GameObject.Instantiate(_tilePrefab);
+                Tile newTile = GameObject.Instantiate(_tilePrefab);
                 newTile.Initialize(_characterOnBoard, _tileSpritesData, this);
                 newTile.transform.parent = _gameHolder;
-                var xIndex = col - (width - 1) / 2.0f;
-                var yIndex = row - (height - 1) / 2.0f;
+                float xIndex = col - (width - 1) / 2.0f;
+                float yIndex = row - (height - 1) / 2.0f;
                 newTile.transform.localPosition = new Vector2(xIndex * _tileSize, yIndex * _tileSize);
                 // Keep a reference to the tile for setting up the game.
                 _tiles.Add(newTile);
@@ -50,24 +50,24 @@ namespace HentaiGame
         public void ResetGameState()
         {
             // Randomly shuffle the tile positions to get indices for mine positions.
-            var minePositions = Enumerable.Range(0, _tiles.Count).OrderBy(x => Random.Range(0.0f, 1.0f)).ToArray();
+            int[] minePositions = Enumerable.Range(0, _tiles.Count).OrderBy(x => Random.Range(0.0f, 1.0f)).ToArray();
 
             // Set mines at the first numMines positions.
-            for (var i = 0; i < _numMines; i++)
+            for (int i = 0; i < _numMines; i++)
             {
-                var pos = minePositions[i];
+                int pos = minePositions[i];
                 _tiles[pos].SetMine(true);
             }
 
             // Update all the tiles to hold the correct number of mines.
-            for (var i = 0; i < _tiles.Count; i++) _tiles[i].SetMineCount(HowManyMines(i));
+            for (int i = 0; i < _tiles.Count; i++) _tiles[i].SetMineCount(HowManyMines(i));
         }
 
         // Given a location work out how many mines are surrounding it.
         private int HowManyMines(int location)
         {
-            var count = 0;
-            foreach (var pos in GetNeighbours(location))
+            int count = 0;
+            foreach (int pos in GetNeighbours(location))
                 if (_tiles[pos].IsMine)
                     count++;
 
@@ -78,8 +78,8 @@ namespace HentaiGame
         private List<int> GetNeighbours(int pos)
         {
             List<int> neighbours = new();
-            var row = pos / _width;
-            var col = pos % _width;
+            int row = pos / _width;
+            int col = pos % _width;
             // (0,0) is bottom left.
             if (row < _height - 1)
             {
@@ -115,15 +115,15 @@ namespace HentaiGame
         public void CheckGameOver()
         {
             // If there are numMines left active then we're done.
-            var count = 0;
-            foreach (var tile in _tiles)
+            int count = 0;
+            foreach (Tile tile in _tiles)
                 if (tile.CanBeClicked)
                     count++;
 
             if (count == _numMines)
             {
                 Debug.Log("Winner!");
-                foreach (var tile in _tiles)
+                foreach (Tile tile in _tiles)
                 {
                     tile.SetActive(false);
                     tile.SetFlaggedIfMine();
@@ -134,10 +134,10 @@ namespace HentaiGame
         // Click on all surrounding tiles if mines are all flagged.
         public void ExpandIfFlagged(Tile tile)
         {
-            var location = _tiles.IndexOf(tile);
+            int location = _tiles.IndexOf(tile);
             // Get the number of flags.
-            var flag_count = 0;
-            foreach (var pos in GetNeighbours(location))
+            int flag_count = 0;
+            foreach (int pos in GetNeighbours(location))
                 if (_tiles[pos].IsFlagged)
                     flag_count++;
 
@@ -149,8 +149,9 @@ namespace HentaiGame
 
         public void ClickNeighbours(Tile tile)
         {
-            var location = _tiles.IndexOf(tile);
-            foreach (var pos in GetNeighbours(location)) _tiles[pos].OpenRecursive();
+            int location = _tiles.IndexOf(tile);
+            foreach (int pos in GetNeighbours(location))
+                _tiles[pos].OpenRecursive();
         }
 
         public void GameOver()
