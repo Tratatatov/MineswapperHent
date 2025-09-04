@@ -17,7 +17,7 @@ MonoBehaviour:
   - {fileID: -2905035679319858871, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
   - {fileID: -2962122377693789009, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
   _clickedTiles:
-  - {fileID: 5388486211577396996, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
+  - {fileID: 0}
   - {fileID: 1734013715764652076, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
   - {fileID: -1754532199342389605, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
   - {fileID: 350754815139252254, guid: d360036e01d26e34fb6d165f666f87bb, type: 3}
