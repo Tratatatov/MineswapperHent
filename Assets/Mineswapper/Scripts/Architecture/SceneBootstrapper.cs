@@ -46,6 +46,7 @@ namespace HentaiGame
                 _installer.BoardConfig.Width,
                 _installer.BoardConfig.Height,
                 _installer.BoardConfig.NumMines);
+            _board.ResetGameState();
         }
     }
 }

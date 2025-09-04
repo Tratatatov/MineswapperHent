@@ -47,7 +47,7 @@ namespace HentaiGame
             _mineHitTile = tileSpritesData.MineHitTile;
             _mineTile = tileSpritesData.MineTile;
             _mineWrongTile = tileSpritesData.MineWrongTile;
-            //_backgroundTile = tileSpritesData.BackgroundTiles;
+            //_backgrou3ndTile = tileSpritesData.BackgroundTiles;
             _flaggedTile = tileSpritesData.FlaggedTile;
             _unclickedTiles = tileSpritesData.UnclickedTiles;
             _clickedTiles = tileSpritesData.ClickedTiles;
@@ -74,7 +74,10 @@ namespace HentaiGame
             if (_isMine)
                 _spriteRenderer.sprite = _mineTile;
             else
+            {
                 _spriteRenderer.sprite = _clickedTiles[MineCount];
+                _backGroundSpriteRenderer.enabled = true;
+            }
         }
 
         // public void OnClick()
@@ -138,7 +141,7 @@ namespace HentaiGame
         {
             // If it hasn't already been pressed.
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButton(0))
                 // If left click reveal the tile contents.
                 OnClick();
             else if (Input.GetMouseButtonDown(1))
@@ -164,7 +167,7 @@ namespace HentaiGame
             Open();
 
             // Если нет мин вокруг, открыть соседние тайлы рекурсивно
-            if (MineCount == 0 && !IsMine) _board.ClickNeighbours(this);
+            //if (MineCount == 0 && !IsMine) _board.ClickNeighbours(this);
         }
 
         public void OnClick()
