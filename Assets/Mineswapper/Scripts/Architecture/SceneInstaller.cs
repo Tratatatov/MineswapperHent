@@ -26,6 +26,8 @@ namespace HentaiGame
         public SpriteRenderer CharacterOnBoardSpriteRenderer => _characterOnBoardSpriteRenderer;
         public MonoBehaviour CoroutineRunner => _coroutineRunner;
 
+        public GameOverScreen GameOverScreen => _gameOverScreen;
+        
         [SerializeField] private SpriteRenderer _characterOnBoardSpriteRenderer;
         [SerializeField] private MonoBehaviour _coroutineRunner;
         [SerializeField] private TileSpritesData _tileSpritesData;
@@ -38,5 +40,7 @@ namespace HentaiGame
         [SerializeField] private StartSetupConfig _startSetupConfig;
         [SerializeField] private Tile _tilePrefab;
         [SerializeField] private Transform _tilesHolder;
+        [SerializeField] private GameOverScreen _gameOverScreen;
+
     }
 }

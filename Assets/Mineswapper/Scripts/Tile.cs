@@ -141,7 +141,7 @@ namespace HentaiGame
         {
             // If it hasn't already been pressed.
 
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButtonDown(0))
                 // If left click reveal the tile contents.
                 OnClick();
             else if (Input.GetMouseButtonDown(1))
@@ -167,7 +167,7 @@ namespace HentaiGame
             Open();
 
             // Если нет мин вокруг, открыть соседние тайлы рекурсивно
-            //if (MineCount == 0 && !IsMine) _board.ClickNeighbours(this);
+            if (MineCount == 0 && !IsMine) _board.ClickNeighbours(this);
         }
 
         public void OnClick()
@@ -182,14 +182,14 @@ namespace HentaiGame
             {
                 _spriteRenderer.sprite = _mineHitTile;
                 _canBeClicked = false;
-                GameEvents.OnGameOver?.Invoke();
+                //GameEvents.OnGameOver?.Invoke();
                 _board.GameOver();
             }
             else
             {
                 OpenRecursive();
                 _board.CheckGameOver();
-
+                
                 // Если тайл уже открыт и имеет число > 0, можно расширить открытие соседей, если флаги стоят правильно
                 if (!CanBeClicked && MineCount > 0) _board.ExpandIfFlagged(this);
             }

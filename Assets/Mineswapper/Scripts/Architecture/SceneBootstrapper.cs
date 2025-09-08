@@ -5,11 +5,17 @@ namespace HentaiGame
     public class SceneBootstrapper : MonoBehaviour
     {
         [SerializeField] private SceneInstaller _installer;
+
         private CharacterView _characterView;
         private Board _board;
         private CharacterOnBoard _characterOnBoard;
         private PlayerMVC _playerMVC;
-        private PlayerStatsData _playerStatsData;
+        [SerializeField] private PlayerStatsData _playerStatsData;
+        private PlayerController _playerController;
+        private MoneyService _moneyService;
+        private GameStateService _gameStateService;
+        private GameEventMediator _gameEventMediator;
+        //private TurnsService _turnsService;
 
         private void Awake()
         {
@@ -21,7 +27,8 @@ namespace HentaiGame
             _playerStatsData = new PlayerStatsData(
                 _installer.StartSetupConfig.StartHp,
                 _installer.StartSetupConfig.StartGold,
-                1
+                1,
+                _installer.StartSetupConfig.StartTurns
             );
             _characterOnBoard = _installer.CharacterOnBoard;
             _characterOnBoard.Initialize(
@@ -35,7 +42,8 @@ namespace HentaiGame
             _playerMVC = new PlayerMVC(
                 _installer.CharacterTextReferences,
                 _playerStatsData,
-                _characterView);
+                _characterView
+            );
             _playerMVC.Initialize(_installer.BoardConfig.NumMines);
             _board = new Board(_installer.BoardConfig,
                 _installer.TilePrefab,
@@ -47,6 +55,10 @@ namespace HentaiGame
                 _installer.BoardConfig.Height,
                 _installer.BoardConfig.NumMines);
             _board.ResetGameState();
+            _gameStateService = new GameStateService(_installer.GameOverScreen);
+            _gameEventMediator = new GameEventMediator(_gameStateService, _playerMVC);
+            //_turnsService = new TurnsService(_turnsService, _gameEventMediator.);
+            _moneyService = new MoneyService(_installer.StartSetupConfig.StartGold);
         }
     }
 }

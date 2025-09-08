@@ -3,60 +3,108 @@ using UnityEngine;
 
 namespace HentaiGame
 {
+    [Serializable]
     public class PlayerStatsData
     {
-        public PlayerStatsData(int startHp, int startCoins, int level)
+        public PlayerStatsData(int startHp, int startMoney, int startLevel, int startTurns)
         {
             _startHp = startHp;
-            _startCoins = startCoins;
-            _level = level;
+            _startMoney = startMoney;
+            _startLevel = startLevel;
+            _startTurns = startTurns;
         }
 
-        private int _startHp;
-        private int _startCoins;
+        [SerializeField] private int _startHp;
+        [SerializeField] private int _startMoney;
+        [SerializeField] private int _startLevel;
 
-        private int _flags;
+        [SerializeField] private int _flags;
 
 
-        private int _hp;
-        private int _level;
-        private int coins;
+        [SerializeField] private int _hp;
+        [SerializeField] private int _level;
+        [SerializeField] private int _money;
+        [SerializeField] private int _turns;
+        [SerializeField] private int _startTurns;
+
+        public int Turns => _turns;
 
         public int Flags => _flags;
 
         public int Level => _level;
 
-        public int Coins => coins;
+        public int Money => _money;
 
         public int Hp => _hp;
 
         public void SetStartValues()
         {
             _hp = _startHp;
-            coins = _startCoins;
-            _level = 1;
+            _money = _startMoney;
+            _level = _startLevel;
+            _turns = _startTurns;
         }
 
-        public void SetFlagValue(int value)
+        public void SetFlagsCount(int value)
         {
             _flags = value;
         }
-
-        public void ChangeHp(int count)
-        {
-            _hp += count;
-        }
-
-        public void ChangeCoins(int count)
-        {
-            coins += count;
-        }
-
-        public void ChangeFlags(int count)
+        
+        public void IncreaseFlags(int count)
         {
             _flags += count;
         }
+        
+        public void DecreaseFlags(int count)
+        {
+            _flags -= count;
+        }
 
+        public void IncreaseHp(int count)
+        {
+            _hp += count;
+        }
+        
+        public void DecreaseHp(int count)
+        {
+            _hp -= count;
+        }
+        
+        public void SetHpCount(int count)
+        {
+            _hp = count;
+        }
+
+        public void SetMoneyCount(int count)
+        {
+            _money = count;
+        }
+        
+        public void IncreaseMoney(int count)
+        {
+            _money += count;
+        }
+        
+        public void DecreaseMoney(int count)
+        {
+            _money -= count;
+        }
+
+        public void IncreaseTurns(int count)
+        {
+            _turns += count;
+        }
+
+        public void DecreaseTurns(int count)
+        {
+         _turns -= count;   
+        }
+
+        public void SetTurnsCount(int count)
+        {
+            _turns = count;
+        }
+        
         public void IncreaseLevel(int count)
         {
             _level += count;

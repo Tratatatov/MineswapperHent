@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace HentaiGame
 {
@@ -7,5 +8,6 @@ namespace HentaiGame
     {
         public int StartGold;
         public int StartHp;
+        public int StartTurns;
     }
 }

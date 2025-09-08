@@ -360,7 +360,7 @@ MonoBehaviour:
     _coinsText: {fileID: 1549849907}
     _turnsText: {fileID: 657789556}
   _characterImagesReferences: {fileID: 12315746}
-  _startSetupConfig: {fileID: 11400000, guid: 3ea6a82b9295da5499a321667544c951, type: 2}
+  _startSetupConfig: {fileID: 11400000, guid: 62a61b60148fb6247a1c6815b59f3dc3, type: 2}
   _tilePrefab: {fileID: 6416076165901997661, guid: 9589596d194a25f4baaf105b699f24a5, type: 3}
   _tilesHolder: {fileID: 1637518343}
   _gameOverScreen: {fileID: 920274162}
@@ -961,16 +961,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _installer: {fileID: 89000544}
-  _playerStatsData:
-    _startHp: 0
-    _startMoney: 0
-    _startLevel: 0
-    _flags: 0
-    _hp: 0
-    _level: 0
-    _money: 0
-    _turns: 0
-    _startTurns: 0
 --- !u!1 &657789554
 GameObject:
   m_ObjectHideFlags: 0
