@@ -20,10 +20,7 @@ namespace HentaiGame
         public void MakeTurn()
         {
             _turnsLeft--;
-            if (_turnsLeft <= 0)
-            {
-                _onTurnsOver?.Invoke();
-            }
+            if (_turnsLeft <= 0) _onTurnsOver?.Invoke();
         }
     }
 }

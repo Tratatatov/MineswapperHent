@@ -9,7 +9,7 @@ namespace Mineswapper
 
         public void SaveGame()
         {
-            string gameData = JsonUtility.ToJson(this);
+            var gameData = JsonUtility.ToJson(this);
             PlayerPrefs.SetString(PlayerSave, gameData);
         }
     }
@@ -33,7 +33,6 @@ namespace Mineswapper
 
         public void AddMoney(int count)
         {
-
         }
 
         public void DecreaseMoney(int count)

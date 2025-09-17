@@ -7,7 +7,6 @@ namespace HentaiGame
         private Vector2 _position;
         private SpriteRenderer _spriteRenderer;
 
-
         public void Initialize(SpriteRenderer characterSpriteRenderer, Sprite miniIconSprite)
         {
             _spriteRenderer = characterSpriteRenderer;

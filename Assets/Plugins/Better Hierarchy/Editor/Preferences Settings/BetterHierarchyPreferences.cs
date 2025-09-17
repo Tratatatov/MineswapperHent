@@ -43,14 +43,14 @@ namespace Utilities.BetterHierarchy
         private const float VERTICAL_SPACE_PADDING = 15;
 
 
-        private static BoolPreference isEnabledBetterHierarchy = new BoolPreference()
+        private static BoolPreference isEnabledBetterHierarchy = new()
         {
             Label = "Enabled",
             DefaultValue = true,
             Key = nameof(BetterHierarchy) + "." + nameof(isEnabledBetterHierarchy)
         };
 
-        private static BoolPreference showAlwaysFirstScriptIcon = new BoolPreference()
+        private static BoolPreference showAlwaysFirstScriptIcon = new()
         {
             Label = "Always Show First Script Icon",
             DefaultValue = false,
@@ -58,56 +58,56 @@ namespace Utilities.BetterHierarchy
         };
 
         private static EnumPreference<UnityNativeScriptsDetectionType> unityScriptDetectionType =
-            new EnumPreference<UnityNativeScriptsDetectionType>()
+            new()
             {
                 Label = "Unity Native Script Keyword",
                 DefaultValue = UnityNativeScriptsDetectionType.Unity,
                 Key = nameof(BetterHierarchy) + "." + nameof(unityScriptDetectionType)
             };
 
-        private static EnumPreference<ScriptIconType> containsUnityScriptsOnly = new EnumPreference<ScriptIconType>()
+        private static EnumPreference<ScriptIconType> containsUnityScriptsOnly = new()
         {
             Label = "Contains Unity Scripts Only",
             DefaultValue = ScriptIconType.BigIcon,
             Key = nameof(BetterHierarchy) + "." + nameof(containsUnityScriptsOnly)
         };
 
-        private static EnumPreference<ScriptIconType> containsNonUnityScripts = new EnumPreference<ScriptIconType>()
+        private static EnumPreference<ScriptIconType> containsNonUnityScripts = new()
         {
             Label = "Contains Non-Unity Scripts",
             DefaultValue = ScriptIconType.SmallIcon,
             Key = nameof(BetterHierarchy) + "." + nameof(containsNonUnityScripts)
         };
 
-        private static EnumPreference<ScriptIconType> containsSingleUserScript = new EnumPreference<ScriptIconType>()
+        private static EnumPreference<ScriptIconType> containsSingleUserScript = new()
         {
             Label = "Contains Single User Script Only",
             DefaultValue = ScriptIconType.SmallIcon,
             Key = nameof(BetterHierarchy) + "." + nameof(containsSingleUserScript)
         };
 
-        private static EnumPreference<ScriptIconType> containsNoScripts = new EnumPreference<ScriptIconType>()
+        private static EnumPreference<ScriptIconType> containsNoScripts = new()
         {
             Label = "Contains No Scripts",
             DefaultValue = ScriptIconType.BigIcon,
             Key = nameof(BetterHierarchy) + "." + nameof(containsNoScripts)
         };
 
-        private static BoolPreference isOverridePrefabIconType = new BoolPreference()
+        private static BoolPreference isOverridePrefabIconType = new()
         {
             Label = "Override Prefab Icons",
             DefaultValue = false,
             Key = nameof(BetterHierarchy) + "." + nameof(isOverridePrefabIconType)
         };
 
-        private static EnumPreference<ScriptIconType> isAPrefab = new EnumPreference<ScriptIconType>()
+        private static EnumPreference<ScriptIconType> isAPrefab = new()
         {
             Label = "Is A Prefab",
             DefaultValue = ScriptIconType.SmallIcon,
             Key = nameof(BetterHierarchy) + "." + nameof(isAPrefab)
         };
-        
-        private static BoolPreference isEnableTooltipsOnHierarchyObject = new BoolPreference()
+
+        private static BoolPreference isEnableTooltipsOnHierarchyObject = new()
         {
             Label = "Enable Hierarchy Icon Tooltips",
             DefaultValue = true,
@@ -128,7 +128,7 @@ namespace Utilities.BetterHierarchy
                 }),
                 activateHandler = (searchContext, rootElement) =>
                 {
-                    var wrapper = new VisualElement()
+                    var wrapper = new VisualElement
                     {
                         style =
                         {
@@ -144,7 +144,7 @@ namespace Utilities.BetterHierarchy
                     var ui = new UIElementBuilder(wrapper);
 
                     ui.AddHeader(TITLE);
-                    
+
                     AddDisableFeatureToggle();
                     AddSimpleDetectorToggles();
                     AddNoUserScriptsFoundToggle();
@@ -152,7 +152,7 @@ namespace Utilities.BetterHierarchy
                     AddUserScriptForLoopDetectionOptions();
                     AddPrefabDetectionOptions();
                     AddHierarchyTooltipOption();
-                    
+
                     ActivateUIListenersFirstTime();
 
                     return;
@@ -178,9 +178,9 @@ namespace Utilities.BetterHierarchy
                             "The icon style when there are no user-made scripts inside of a GameObject.");
                         showAlwaysFirstScriptIcon.OnValueChanged += value =>
                             unityScriptsOnlySelection.label =
-                                (value ? "First Script Is Unity Related" : containsUnityScriptsOnly.Label);
+                                value ? "First Script Is Unity Related" : containsUnityScriptsOnly.Label;
                     }
-                    
+
                     void AddDisableForLoopUserScriptDetectionToggle()
                     {
                         ui.AddToggle(showAlwaysFirstScriptIcon,
@@ -208,10 +208,12 @@ namespace Utilities.BetterHierarchy
                             "and checks only for the 'Unity' keyword in the entire namespace. \n\n" +
                             "The second option is useful when you have additional plugins with the 'Unity' keyword " +
                             "that you want to be considered as part of non-user scripts.");
-                        
+
                         showAlwaysFirstScriptIcon.OnValueChanged += value => userScriptsSelection.SetEnabled(!value);
-                        showAlwaysFirstScriptIcon.OnValueChanged += value => userScriptDetectionTooltip.SetEnabled(!value);
-                        showAlwaysFirstScriptIcon.OnValueChanged += value => unityScriptTypeSelection.SetEnabled(!value);
+                        showAlwaysFirstScriptIcon.OnValueChanged +=
+                            value => userScriptDetectionTooltip.SetEnabled(!value);
+                        showAlwaysFirstScriptIcon.OnValueChanged +=
+                            value => unityScriptTypeSelection.SetEnabled(!value);
                     }
 
                     void AddPrefabDetectionOptions()
@@ -223,16 +225,16 @@ namespace Utilities.BetterHierarchy
                         isAPrefabToggle.style.paddingTop = VERTICAL_SPACE_PADDING;
                         var isAPrefabSelection = ui.AddSelection(isAPrefab,
                             "Select the Script Icon Type for Prefabs.");
-                        
+
                         isAPrefabSelection.SetEnabled(isOverridePrefabIconType.Get());
                         isOverridePrefabIconType.OnValueChanged += value => isAPrefabSelection.SetEnabled(value);
                     }
-                    
+
                     void AddHierarchyTooltipOption()
                     {
                         ui.AddToggle(isEnableTooltipsOnHierarchyObject,
-                            "If enabled, a tooltip of the name of the component icon will show up " +
-                            "when you hover on top of a GameObject in the hierarchy.")
+                                "If enabled, a tooltip of the name of the component icon will show up " +
+                                "when you hover on top of a GameObject in the hierarchy.")
                             .style.marginTop = VERTICAL_SPACE_PADDING;
                     }
 

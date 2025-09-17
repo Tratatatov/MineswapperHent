@@ -5,60 +5,66 @@ namespace HentaiGame
     public class SceneBootstrapper : MonoBehaviour
     {
         [SerializeField] private SceneInstaller _installer;
-
-        private CharacterView _characterView;
+        [SerializeField] private PlayerStatsData _playerStatsData;
         private Board _board;
         private CharacterOnBoard _characterOnBoard;
-        private PlayerMVC _playerMVC;
-        [SerializeField] private PlayerStatsData _playerStatsData;
-        private PlayerController _playerController;
+
+        private CharacterView _characterView;
+        private GameOverService _gameOverService;
         private MoneyService _moneyService;
-        private GameStateService _gameStateService;
-        private GameEventMediator _gameEventMediator;
-        //private TurnsService _turnsService;
+        private PlayerController _playerController;
+        private PlayerMVC _playerMVC;
+
 
         private void Awake()
         {
             Initialize();
+            RegisterServices();
         }
 
         private void Initialize()
         {
             _playerStatsData = new PlayerStatsData(
-                _installer.StartSetupConfig.StartHp,
-                _installer.StartSetupConfig.StartGold,
+                startHp: _installer.StartSetupConfig.StartHp,
+                startMoney: _installer.StartSetupConfig.StartGold,
                 1,
-                _installer.StartSetupConfig.StartTurns
+                startTurns: _installer.StartSetupConfig.StartTurns
             );
             _characterOnBoard = _installer.CharacterOnBoard;
             _characterOnBoard.Initialize(
-                _installer.CharacterOnBoardSpriteRenderer,
-                _installer.CharacterSpritesConfig.SmallIconSprite);
+                characterSpriteRenderer: _installer.CharacterOnBoardSpriteRenderer,
+                miniIconSprite: _installer.CharacterSpritesConfig.SmallIconSprite);
             _characterView = new CharacterView(
-                _installer.CharacterImagesReferences,
-                _installer.CharacterSpritesConfig,
-                _installer.AnimationSpeedConfig.FaceChangeSpeed,
-                _installer.CoroutineRunner);
+                characterImagesReferences: _installer.CharacterImagesReferences,
+                characterSpritesConfig: _installer.CharacterSpritesConfig,
+                animationSpeed: _installer.AnimationSpeedConfig.FaceChangeSpeed,
+                coroutineStarter: _installer.CoroutineRunner);
             _playerMVC = new PlayerMVC(
-                _installer.CharacterTextReferences,
-                _playerStatsData,
-                _characterView
+                characterTextReferences: _installer.CharacterTextReferences,
+                playerStatsData: _playerStatsData,
+                characterView: _characterView
             );
-            _playerMVC.Initialize(_installer.BoardConfig.NumMines);
-            _board = new Board(_installer.BoardConfig,
-                _installer.TilePrefab,
-                _installer.TilesHolder,
-                _characterOnBoard,
-                _installer.TileSpritesData);
+            _playerMVC.Initialize(flagsCount: _installer.BoardConfig.NumMines);
+            _board = new Board(boardConfig: _installer.BoardConfig,
+                tilePrefab: _installer.TilePrefab,
+                gameHolder: _installer.TilesHolder,
+                characterOnBoard: _characterOnBoard,
+                tileSpritesData: _installer.TileSpritesDataConfig);
             _board.CreateGameBoard(
-                _installer.BoardConfig.Width,
-                _installer.BoardConfig.Height,
-                _installer.BoardConfig.NumMines);
+                width: _installer.BoardConfig.Width,
+                height: _installer.BoardConfig.Height,
+                numMines: _installer.BoardConfig.NumMines);
             _board.ResetGameState();
-            _gameStateService = new GameStateService(_installer.GameOverScreen);
-            _gameEventMediator = new GameEventMediator(_gameStateService, _playerMVC);
-            //_turnsService = new TurnsService(_turnsService, _gameEventMediator.);
-            _moneyService = new MoneyService(_installer.StartSetupConfig.StartGold);
+            _moneyService = new MoneyService(currentMoney: _installer.StartSetupConfig.StartGold);
+            _gameOverService = _installer.GameOverService;
+            _gameOverService.Initialize();
+            GlobalState.GameState = GameState.GamePlay;
+        }
+
+        private void RegisterServices()
+        {
+            ServiceLocator.Register(service: _playerMVC);
+            ServiceLocator.Register(service: _gameOverService);
         }
     }
 }

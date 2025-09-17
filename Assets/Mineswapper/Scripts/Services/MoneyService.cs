@@ -16,6 +16,6 @@
 
     public void RemoveMoney(int amount)
     {
-        _currentMoney-= amount;
+        _currentMoney -= amount;
     }
 }

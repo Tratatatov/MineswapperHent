@@ -1,9 +1,8 @@
-﻿using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace HentaiGame
 {
-    public class GameOverScreen:MonoBehaviour
+    public class GameOverScreen : MonoBehaviour
     {
         
     }

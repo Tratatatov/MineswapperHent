@@ -8,15 +8,5 @@ namespace HentaiGame
         public static Action OnPlayerTurnsOver;
         public static Action OnTurnOver;
 
-        // public static void MakeTurn()
-        // {
-        //     OnPlayerTurnOver?.Invoke();
-        // }
-        //
-        // public static void MakeGameOver()
-        // {
-        //     OnGameOver?.Invoke();
-        // }
-        
     }
 }

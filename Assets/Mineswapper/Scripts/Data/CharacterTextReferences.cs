@@ -11,6 +11,9 @@ namespace HentaiGame
         [SerializeField] private TextMeshProUGUI _flagsText;
         [SerializeField] private TextMeshProUGUI _levelText;
         [SerializeField] private TextMeshProUGUI _coinsText;
+        [SerializeField] private TextMeshProUGUI _turnsText;
+
+        public TextMeshProUGUI TurnsText => _turnsText;
 
         public void SetText(TextMeshProUGUI text, string previewText, int value)
         {

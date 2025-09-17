@@ -7,20 +7,13 @@ namespace HentaiGame
     public class Tile : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer _backGroundSpriteRenderer;
-        public bool IsFlagged => _isFlagged;
-
-        public bool CanBeClicked => _canBeClicked;
-
-        public bool IsMine => _isMine;
-
-        public int MineCount => _mineCount;
 
         // public Board Board => _board;
 
         private Sprite _backgroundTile;
+        private Board _board;
         private CharacterOnBoard _characterOnBoard;
         private List<Sprite> _clickedTiles;
-        private List<Sprite> _unclickedTiles;
         private Sprite _doorSprite;
         private Sprite _flaggedTile;
         private Sprite _mineHitTile;
@@ -28,21 +21,35 @@ namespace HentaiGame
         private Sprite _mineWrongTile;
         private SpriteRenderer _spriteRenderer;
         private Sprite _unclickedTile;
-        private bool _isFlagged;
-        private bool _canBeClicked;
-        private bool _isMine;
-        private int _mineCount;
-        private Board _board;
+        private List<Sprite> _unclickedTiles;
+        public bool IsFlagged { get; private set; }
 
+        public bool CanBeClicked { get; private set; }
+
+        public bool IsMine { get; private set; }
+
+        public int MineCount { get; private set; }
+
+        private void OnMouseOver()
+        {
+            if (GlobalState.GameState == GameState.GameOver) return;
+
+            // If it hasn't already been pressed.
+
+            if (Input.GetMouseButton(0))
+                OnClick();
+            else if (Input.GetMouseButtonDown(1))
+                SetFlag();
+        }
 
         public void Initialize(CharacterOnBoard characterOnBoard, TileSpritesData tileSpritesData, Board board)
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _characterOnBoard = characterOnBoard;
             _board = board;
-            _isMine = false;
-            _isFlagged = false;
-            _canBeClicked = true;
+            IsMine = false;
+            IsFlagged = false;
+            CanBeClicked = true;
             _unclickedTile = tileSpritesData.GetRandomUnclickedTile();
             _mineHitTile = tileSpritesData.MineHitTile;
             _mineTile = tileSpritesData.MineTile;
@@ -56,12 +63,12 @@ namespace HentaiGame
 
         public void SetMine(bool value)
         {
-            _isMine = value;
+            IsMine = value;
         }
 
         public void SetActive(bool value)
         {
-            _canBeClicked = value;
+            CanBeClicked = value;
         }
 
         public void Open()
@@ -69,90 +76,51 @@ namespace HentaiGame
             if (!CanBeClicked || IsFlagged)
                 return;
 
-            _canBeClicked = false;
+            CanBeClicked = false;
 
-            if (_isMine)
+            if (IsMine)
+            {
                 _spriteRenderer.sprite = _mineTile;
+            }
             else
             {
-                _spriteRenderer.sprite = _clickedTiles[MineCount];
+                _spriteRenderer.sprite = _clickedTiles[index: MineCount];
                 _backGroundSpriteRenderer.enabled = true;
             }
         }
 
-        // public void OnClick()
-        // {
-        //     _characterOnBoard.Activate(true);
-        //     _characterOnBoard.MoveTo(this);
-        //
-        //
-        //     // Ensure it can no longer be pressed again.
-        //     _canBeClicked = false;
-        //
-        //     if (_isMine)
-        //     {
-        //         // Game over :(
-        //         _spriteRenderer.sprite = _mineHitTile;
-        //         GameEvents.OnGameOver?.Invoke();
-        //     }
-        //     else
-        //     {
-        //         // It was a safe click, set the correct sprite.
-        //         _spriteRenderer.sprite = _clickedTiles[_mineCount];
-        //         _backGroundSpriteRenderer.enabled = true;
-        //         Debug.Log("Clicked tile");
-        //         //GameManager.ClickCross(this);
-        //         //GameManager.CheckGameOver();
-        //     }
-        // }
-
         public void SetMineCount(int value)
         {
-            _mineCount = value;
+            MineCount = value;
         }
 
-
-        // If this tile should be shown at game over, do so.
         public void ShowGameOverState()
         {
-            if (_canBeClicked)
+            if (CanBeClicked)
             {
-                _canBeClicked = false;
-                if (_isMine & !_isFlagged)
+                CanBeClicked = false;
+                if (IsMine & !IsFlagged)
                     // If mine and not flagged show mine.
                     _spriteRenderer.sprite = _mineTile;
-                else if (_isFlagged & !_isMine)
+                else if (IsFlagged & !IsMine)
                     // If flagged incorrectly show crossthrough mine
                     _spriteRenderer.sprite = _mineWrongTile;
             }
         }
 
-        // Helper function to flag remaning mines on game completion.
         public void SetFlaggedIfMine()
         {
-            if (_isMine)
+            if (IsMine)
             {
-                _isFlagged = true;
+                IsFlagged = true;
                 _spriteRenderer.sprite = _flaggedTile;
             }
         }
 
-        private void OnMouseOver()
-        {
-            // If it hasn't already been pressed.
-
-            if (Input.GetMouseButtonDown(0))
-                // If left click reveal the tile contents.
-                OnClick();
-            else if (Input.GetMouseButtonDown(1))
-                // If right click toggle flag on/off.
-                SetFlag();
-        }
-
         private void SetFlag()
         {
-            _isFlagged = !_isFlagged;
-            if (_isFlagged)
+            IsFlagged = !IsFlagged;
+            if (IsFlagged)
                 _spriteRenderer.sprite = _flaggedTile;
             else
                 _spriteRenderer.sprite = _unclickedTile;
@@ -172,27 +140,46 @@ namespace HentaiGame
 
         public void OnClick()
         {
-            if (!CanBeClicked || IsFlagged)
+            if (CantBeClicked())
                 return;
 
+            MoveCharacter();
+
+            if (IsMine)
+                Booom();
+            else
+                //OpenRecursive();
+                OpenTile();
+            //if (!CanBeClicked && MineCount > 0) _board.ExpandIfFlagged(this);
+        }
+
+        private bool CantBeClicked()
+        {
+            return !CanBeClicked || IsFlagged;
+        }
+
+        private void OpenTile()
+        {
+            Open();
+            ServiceLocator.Get<PlayerMVC>().DecreaseTurns();
+            
+            //_board.CheckGameOver();
+        }
+
+        private void Booom()
+        {
+            _spriteRenderer.sprite = _mineHitTile;
+            CanBeClicked = false;
+            ServiceLocator.Get<PlayerMVC>().DecreaseHp(1);
+
+            //GameEvents.OnGameOver?.Invoke();
+            //_board.GameOver();
+        }
+
+        private void MoveCharacter()
+        {
             _characterOnBoard.Activate(true);
             _characterOnBoard.MoveTo(this);
-
-            if (_isMine)
-            {
-                _spriteRenderer.sprite = _mineHitTile;
-                _canBeClicked = false;
-                //GameEvents.OnGameOver?.Invoke();
-                _board.GameOver();
-            }
-            else
-            {
-                OpenRecursive();
-                _board.CheckGameOver();
-                
-                // Если тайл уже открыт и имеет число > 0, можно расширить открытие соседей, если флаги стоят правильно
-                if (!CanBeClicked && MineCount > 0) _board.ExpandIfFlagged(this);
-            }
         }
     }
 }

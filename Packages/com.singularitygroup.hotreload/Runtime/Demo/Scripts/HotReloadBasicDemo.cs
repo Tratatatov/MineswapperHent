@@ -169,9 +169,9 @@ namespace SingularityGroup.HotReload.Demo
 
             // Define implicit operator
             public static implicit operator string(Email value) // Uncomment to change the implicit operator
-            // => value.Value + " FOO";
+                // => value.Value + " FOO";
             {
-            return value.Value;
+                return value.Value;
             }
 
             // // Uncomment to change add an implicit operator

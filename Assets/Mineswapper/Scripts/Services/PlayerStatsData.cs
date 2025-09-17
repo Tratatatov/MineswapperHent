@@ -49,12 +49,12 @@ namespace HentaiGame
         {
             _flags = value;
         }
-        
+
         public void IncreaseFlags(int count)
         {
             _flags += count;
         }
-        
+
         public void DecreaseFlags(int count)
         {
             _flags -= count;
@@ -64,12 +64,12 @@ namespace HentaiGame
         {
             _hp += count;
         }
-        
+
         public void DecreaseHp(int count)
         {
             _hp -= count;
         }
-        
+
         public void SetHpCount(int count)
         {
             _hp = count;
@@ -79,12 +79,12 @@ namespace HentaiGame
         {
             _money = count;
         }
-        
+
         public void IncreaseMoney(int count)
         {
             _money += count;
         }
-        
+
         public void DecreaseMoney(int count)
         {
             _money -= count;
@@ -97,14 +97,14 @@ namespace HentaiGame
 
         public void DecreaseTurns(int count)
         {
-         _turns -= count;   
+            _turns -= count;
         }
 
         public void SetTurnsCount(int count)
         {
             _turns = count;
         }
-        
+
         public void IncreaseLevel(int count)
         {
             _level += count;
