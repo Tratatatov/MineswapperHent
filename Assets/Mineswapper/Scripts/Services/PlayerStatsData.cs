@@ -6,32 +6,30 @@ namespace HentaiGame
     [Serializable]
     public class PlayerStatsData
     {
-        public PlayerStatsData(int startHp, int startMoney, int startLevel, int startTurns)
-        {
-            _startHp = startHp;
-            _startMoney = startMoney;
-            _startLevel = startLevel;
-            _startTurns = startTurns;
-        }
-
         [SerializeField] private int _startHp;
         [SerializeField] private int _startMoney;
-        [SerializeField] private int _startLevel;
 
         [SerializeField] private int _flags;
 
 
         [SerializeField] private int _hp;
-        [SerializeField] private int _level;
+        // [SerializeField] private int _level;
         [SerializeField] private int _money;
         [SerializeField] private int _turns;
         [SerializeField] private int _startTurns;
+
+        public PlayerStatsData(int startHp, int startMoney, int startTurns)
+        {
+            _startHp = startHp;
+            _startMoney = startMoney;
+            _startTurns = startTurns;
+        }
 
         public int Turns => _turns;
 
         public int Flags => _flags;
 
-        public int Level => _level;
+        // public int Level => _level;
 
         public int Money => _money;
 
@@ -41,7 +39,7 @@ namespace HentaiGame
         {
             _hp = _startHp;
             _money = _startMoney;
-            _level = _startLevel;
+            // _level = _startLevel;
             _turns = _startTurns;
         }
 
@@ -83,11 +81,13 @@ namespace HentaiGame
         public void IncreaseMoney(int count)
         {
             _money += count;
+            PlayerProgeress.AddCoins(amount: count);
         }
 
         public void DecreaseMoney(int count)
         {
             _money -= count;
+            PlayerProgeress.DecreaseCoins(amount: count);
         }
 
         public void IncreaseTurns(int count)
@@ -105,9 +105,9 @@ namespace HentaiGame
             _turns = count;
         }
 
-        public void IncreaseLevel(int count)
-        {
-            _level += count;
-        }
+        // public void IncreaseLevel(int count)
+        // {
+        //     _level += count;
+        // }
     }
 }

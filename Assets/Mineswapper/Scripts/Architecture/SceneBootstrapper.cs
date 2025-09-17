@@ -25,10 +25,9 @@ namespace HentaiGame
         private void Initialize()
         {
             _playerStatsData = new PlayerStatsData(
-                startHp: _installer.StartSetupConfig.StartHp,
-                startMoney: _installer.StartSetupConfig.StartGold,
-                1,
-                startTurns: _installer.StartSetupConfig.StartTurns
+                startHp: PlayerProgeress.CurrentHp,
+                startMoney: PlayerProgeress.Coins,
+                startTurns: PlayerProgeress.MaxTurns
             );
             _characterOnBoard = _installer.CharacterOnBoard;
             _characterOnBoard.Initialize(
@@ -55,7 +54,7 @@ namespace HentaiGame
                 height: _installer.BoardConfig.Height,
                 numMines: _installer.BoardConfig.NumMines);
             _board.ResetGameState();
-            _moneyService = new MoneyService(currentMoney: _installer.StartSetupConfig.StartGold);
+            // _moneyService = new MoneyService(currentMoney: PlayerProgeress.Coins);
             _gameOverService = _installer.GameOverService;
             _gameOverService.Initialize();
             GlobalState.GameState = GameState.GamePlay;

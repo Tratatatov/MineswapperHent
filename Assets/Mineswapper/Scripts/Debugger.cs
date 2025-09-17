@@ -4,16 +4,16 @@ using UnityEngine.SceneManagement;
 
 public class Debugger : MonoBehaviour
 {
-    [SerializeField] GameState _gameState;
- 
-     void Update()
+    [SerializeField] private GameState _gameState;
+
+    private void Update()
     {
         _gameState = GlobalState.GameState;
+        Debug.Log(PlayerProgeress.CurrentLevel.ToString());
     }
 
     public void Restart()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        
+        SceneManager.LoadScene(sceneName: SceneManager.GetActiveScene().name);
     }
 }

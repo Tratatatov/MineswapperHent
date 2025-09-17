@@ -8,8 +8,6 @@ namespace HentaiGame
     {
         [SerializeField] private SpriteRenderer _backGroundSpriteRenderer;
 
-        // public Board Board => _board;
-
         private Sprite _backgroundTile;
         private Board _board;
         private CharacterOnBoard _characterOnBoard;
@@ -21,7 +19,11 @@ namespace HentaiGame
         private Sprite _mineWrongTile;
         private SpriteRenderer _spriteRenderer;
         private Sprite _unclickedTile;
+
         private List<Sprite> _unclickedTiles;
+
+        public bool IsOpened { get; }
+
         public bool IsFlagged { get; private set; }
 
         public bool CanBeClicked { get; private set; }
@@ -32,9 +34,7 @@ namespace HentaiGame
 
         private void OnMouseOver()
         {
-            if (GlobalState.GameState == GameState.GameOver) return;
-
-            // If it hasn't already been pressed.
+            if (GlobalState.GameState == GameState.GameOver || !CanBeClicked) return;
 
             if (Input.GetMouseButton(0))
                 OnClick();
@@ -51,10 +51,10 @@ namespace HentaiGame
             IsFlagged = false;
             CanBeClicked = true;
             _unclickedTile = tileSpritesData.GetRandomUnclickedTile();
+            _spriteRenderer.sprite = _unclickedTile;
             _mineHitTile = tileSpritesData.MineHitTile;
             _mineTile = tileSpritesData.MineTile;
             _mineWrongTile = tileSpritesData.MineWrongTile;
-            //_backgrou3ndTile = tileSpritesData.BackgroundTiles;
             _flaggedTile = tileSpritesData.FlaggedTile;
             _unclickedTiles = tileSpritesData.UnclickedTiles;
             _clickedTiles = tileSpritesData.ClickedTiles;
@@ -100,10 +100,8 @@ namespace HentaiGame
             {
                 CanBeClicked = false;
                 if (IsMine & !IsFlagged)
-                    // If mine and not flagged show mine.
                     _spriteRenderer.sprite = _mineTile;
                 else if (IsFlagged & !IsMine)
-                    // If flagged incorrectly show crossthrough mine
                     _spriteRenderer.sprite = _mineWrongTile;
             }
         }
@@ -121,9 +119,15 @@ namespace HentaiGame
         {
             IsFlagged = !IsFlagged;
             if (IsFlagged)
+            {
                 _spriteRenderer.sprite = _flaggedTile;
+                ServiceLocator.Get<PlayerMVC>().DecreaseFlags(1);
+            }
             else
+            {
                 _spriteRenderer.sprite = _unclickedTile;
+                ServiceLocator.Get<PlayerMVC>().AddFlags(1);
+            }
         }
 
 
@@ -162,7 +166,7 @@ namespace HentaiGame
         {
             Open();
             ServiceLocator.Get<PlayerMVC>().DecreaseTurns();
-            
+
             //_board.CheckGameOver();
         }
 
@@ -171,9 +175,6 @@ namespace HentaiGame
             _spriteRenderer.sprite = _mineHitTile;
             CanBeClicked = false;
             ServiceLocator.Get<PlayerMVC>().DecreaseHp(1);
-
-            //GameEvents.OnGameOver?.Invoke();
-            //_board.GameOver();
         }
 
         private void MoveCharacter()

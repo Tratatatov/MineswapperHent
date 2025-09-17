@@ -14,5 +14,5 @@ MonoBehaviour:
     \u0431\u043E\u043D\u0443\u0441\u043E\u0432"
   m_EditorClassIdentifier: 
   StartGold: 0
-  StartHp: 10
-  StartTurns: 40
+  StartHp: 5
+  StartTurns: 20

@@ -30,7 +30,7 @@ namespace HentaiGame
             _characterTextReferences.SetText(text: _characterTextReferences.FlagsText, "Flags",
                 value: _playerStatsData.Flags);
             _characterTextReferences.SetText(text: _characterTextReferences.LevelText, "Level",
-                value: _playerStatsData.Level);
+                value: PlayerProgeress.CurrentLevel);
             _characterTextReferences.SetText(text: _characterTextReferences.CoinsText, "Coins",
                 value: _playerStatsData.Money);
             _characterTextReferences.SetText(text: _characterTextReferences.TurnsText, "Turns",
@@ -51,13 +51,6 @@ namespace HentaiGame
                 value: _playerStatsData.Turns);
         }
 
-        public void AddLevel(int count)
-        {
-            _playerStatsData.IncreaseLevel(count: count);
-            _characterTextReferences.SetText(text: _characterTextReferences.LevelText, "Level",
-                value: _playerStatsData.Level);
-        }
-
         public void AddFlags(int count)
         {
             _playerStatsData.IncreaseFlags(count: count);
@@ -76,10 +69,17 @@ namespace HentaiGame
         {
             _playerStatsData.DecreaseTurns(1);
 
-            if (_playerStatsData.Turns <= 0) ChangeSceneService.GoToNextLevel();
+            if (_playerStatsData.Turns <= 0) NextLevel();
 
             _characterTextReferences.SetText(text: _characterTextReferences.TurnsText, "Turns",
                 value: _playerStatsData.Turns);
+        }
+
+        private void NextLevel()
+        {
+            PlayerProgeress.IncreaseLevel();
+            PlayerProgeress.SaveProgress();
+            ChangeSceneService.GoToNextLevel();
         }
 
         public void DecreaseHp(int count)
