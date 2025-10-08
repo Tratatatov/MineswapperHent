@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace HentaiGame
 {
-    public class CharacterView
+    public class CharacterImages
     {
         private Face _face;
         private Bruses _bruses;
@@ -15,7 +15,7 @@ namespace HentaiGame
         private Coroutine _damageEffectCoroutine;
 
 
-        public CharacterView(CharacterImagesReferences characterImagesReferences,
+        public CharacterImages(CharacterImagesReferences characterImagesReferences,
             CharacterSpritesConfig characterSpritesConfig, float animationSpeed,
             MonoBehaviour coroutineStarter)
         {

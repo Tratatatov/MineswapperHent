@@ -9,9 +9,10 @@ namespace HentaiGame
         public void Initialize()
         {
             _gameOverScreen.gameObject.SetActive(false);
+            GameEvents.OnGameOver += GameOver;
         }
-        
-        public void GameOver()
+
+        private void GameOver()
         {
             _gameOverScreen.gameObject.SetActive(true);
             GlobalState.GameState = GameState.GameOver;

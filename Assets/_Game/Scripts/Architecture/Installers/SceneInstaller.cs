@@ -9,10 +9,9 @@ namespace HentaiGame
         [SerializeField] private CharacterSpritesConfig characterSpritesConfig;
         [SerializeField] private AnimationSpeedConfig _animationSpeedConfig;
         [SerializeField] private BoardConfig _boardConfig;
-
+        [SerializeField] private CharacterStatsView characterChatacterStatsView;
         [SerializeField] private References _references;
-        // public StartSetupConfig StartSetupConfig => _startSetupConfig;
-
+        [SerializeField] private GameOverMenu _gameOverMenu;
         public AnimationSpeedConfig AnimationSpeedConfig => _animationSpeedConfig;
 
         public BoardConfig BoardConfig => _boardConfig;
@@ -22,7 +21,6 @@ namespace HentaiGame
         public CharacterSpritesConfig CharacterSpritesConfig => characterSpritesConfig;
 
         public GameOverService GameOverService => _references.GameOverService;
-        public CharacterTextReferences CharacterTextReferences => _references.CharacterTextReferences;
 
         public CharacterImagesReferences CharacterImagesReferences => _references.CharacterImagesReferences;
 
@@ -33,6 +31,10 @@ namespace HentaiGame
         public SpriteRenderer CharacterOnBoardSpriteRenderer => _references.CharacterOnBoardSpriteRenderer;
         public MonoBehaviour CoroutineRunner => _references.CoroutineRunner;
         public CharacterOnBoard CharacterOnBoard => _references.CharacterOnBoard;
+
+        public CharacterStatsView ChatacterStatsView => characterChatacterStatsView;
+
+        public GameOverMenu GameOverMenu => _gameOverMenu;
     }
 
     [Serializable]
@@ -41,7 +43,6 @@ namespace HentaiGame
         [SerializeField] private SpriteRenderer _characterOnBoardSpriteRenderer;
         [SerializeField] private MonoBehaviour _coroutineRunner;
         [SerializeField] private CharacterOnBoard _characterOnBoard;
-        [SerializeField] private CharacterTextReferences _characterTextReferences;
         [SerializeField] private CharacterImagesReferences _characterImagesReferences;
         [SerializeField] private Tile _tilePrefab;
         [SerializeField] private Transform _tilesHolder;
@@ -50,9 +51,6 @@ namespace HentaiGame
         public GameOverService GameOverService => _gameOverService;
 
         public CharacterOnBoard CharacterOnBoard => _characterOnBoard;
-
-
-        public CharacterTextReferences CharacterTextReferences => _characterTextReferences;
 
         public CharacterImagesReferences CharacterImagesReferences => _characterImagesReferences;
 

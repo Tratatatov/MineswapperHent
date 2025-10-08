@@ -4,7 +4,6 @@ namespace HentaiGame
 {
     public class GameInstaller : MonoBehaviour
     {
-        [SerializeField] private StartSetupConfig _startSetupConfig;
         [SerializeField] private SoundManager _soundManager;
         [SerializeField] private PlayerDefaultStatsConfig _playerDefaultStatsConfig;
 
@@ -12,6 +11,5 @@ namespace HentaiGame
 
         public SoundManager SoundManager => _soundManager;
 
-        public StartSetupConfig SetupConfig => _startSetupConfig;
     }
 }

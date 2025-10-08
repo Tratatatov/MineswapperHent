@@ -350,20 +350,16 @@ MonoBehaviour:
   characterSpritesConfig: {fileID: 11400000, guid: d2536f20d09741248b035607df120542, type: 2}
   _animationSpeedConfig: {fileID: 11400000, guid: fac09bfc4729e9645a19899e1fc0a841, type: 2}
   _boardConfig: {fileID: 11400000, guid: e10168d918fe25941883bc3b398d8c75, type: 2}
+  characterChatacterStatsView: {fileID: 1969982278}
   _references:
     _characterOnBoardSpriteRenderer: {fileID: 2322888032512408281}
     _coroutineRunner: {fileID: 963170454}
     _characterOnBoard: {fileID: 6644852248059603389}
-    _characterTextReferences:
-      _hpText: {fileID: 1434383582}
-      _flagsText: {fileID: 280618802}
-      _levelText: {fileID: 69040628}
-      _coinsText: {fileID: 1549849907}
-      _turnsText: {fileID: 657789556}
     _characterImagesReferences: {fileID: 12315746}
     _tilePrefab: {fileID: 6416076165901997661, guid: 9589596d194a25f4baaf105b699f24a5, type: 3}
     _tilesHolder: {fileID: 1637518343}
     _gameOverService: {fileID: 958920216}
+  _gameOverMenu: {fileID: 920274163}
 --- !u!1 &203824808
 GameObject:
   m_ObjectHideFlags: 0
@@ -1017,7 +1013,7 @@ GameObject:
   - component: {fileID: 597514148}
   - component: {fileID: 597514149}
   m_Layer: 0
-  m_Name: Bootstrapper
+  m_Name: SceneBootstrapper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1282,7 +1278,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &920274158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2712,7 +2708,7 @@ GameObject:
   - component: {fileID: 1969982277}
   - component: {fileID: 1969982278}
   m_Layer: 0
-  m_Name: RunProgressView
+  m_Name: CharacterStatsView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2742,14 +2738,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1969982276}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af6b65af77ad4cffaf2389f98ff9e5f4, type: 3}
+  m_Script: {fileID: 11500000, guid: 6976fcecb524455781a1ba8189e14f9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hpText: {fileID: 0}
-  _coinsText: {fileID: 0}
-  _levelText: {fileID: 0}
-  _flagsText: {fileID: 0}
-  _turnsText: {fileID: 0}
+  _hpText: {fileID: 1434383582}
+  _coinsText: {fileID: 1549849907}
+  _levelText: {fileID: 69040628}
+  _flagsText: {fileID: 280618802}
+  _turnsText: {fileID: 657789556}
 --- !u!1 &2061191353
 GameObject:
   m_ObjectHideFlags: 0

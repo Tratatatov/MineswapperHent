@@ -1,30 +1,35 @@
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace HentaiGame
 {
-    public static class ChangeSceneService
+    public class ChangeSceneService
     {
-        public static void GoToMainMenu()
+        public void GoToMainMenu()
         {
             SceneManager.LoadScene(sceneBuildIndex: SceneConsts.MainMenu);
         }
 
-        public static void GoToPerksScene()
+        public void GoToPerksScene()
         {
             SceneManager.LoadScene(sceneBuildIndex: SceneConsts.Perks);
         }
 
-        public static void GoToLevel(int level)
+        public void GoToLevel(int level)
         {
             SceneManager.LoadScene(level + 1);
         }
 
-        public static void GoToNextLevel()
+        public void GoToNextLevel()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            if (
+                SceneManager.GetActiveScene().buildIndex != SceneManager.sceneCountInBuildSettings - 3)
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            else
+                Debug.Log("Ты победил, молодец!");
         }
 
-        public static void ResetLevel()
+        public void ResetLevel()
         {
             SceneManager.LoadScene(sceneBuildIndex: SceneManager.GetActiveScene().buildIndex);
         }

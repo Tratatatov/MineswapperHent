@@ -113,40 +113,40 @@ namespace HentaiGame
         //     foreach (var tile in _tiles) tile.ShowGameOverState();
         // }
 
-        public void CheckGameOver()
-        {
-            // If there are numMines left active then we're done.
-            // int count = 0;
-            // foreach (Tile tile in _tiles)
-            //     if (tile.CanBeClicked)
-            //         count++;
-            //
-            // if (count == _numMines)
-            // {
-            //     Debug.Log("Winner!");
-            //     foreach (Tile tile in _tiles)
-            //     {
-            //         tile.SetActive(false);
-            //         tile.SetFlaggedIfMine();
-            //     }
-            // }
-        }
+        // public void CheckGameOver()
+        // {
+        //     // If there are numMines left active then we're done.
+        //     // int count = 0;
+        //     // foreach (Tile tile in _tiles)
+        //     //     if (tile.CanBeClicked)
+        //     //         count++;
+        //     //
+        //     // if (count == _numMines)
+        //     // {
+        //     //     Debug.Log("Winner!");
+        //     //     foreach (Tile tile in _tiles)
+        //     //     {
+        //     //         tile.SetActive(false);
+        //     //         tile.SetFlaggedIfMine();
+        //     //     }
+        //     // }
+        // }
 
         // Click on all surrounding tiles if mines are all flagged.
-        public void ExpandIfFlagged(Tile tile)
-        {
-            int location = _tiles.IndexOf(item: tile);
-            // Get the number of flags.
-            int flag_count = 0;
-            foreach (int pos in GetNeighbours(pos: location))
-                if (_tiles[index: pos].IsFlagged)
-                    flag_count++;
-
-            // If we have the right number click surrounding tiles.
-            if (flag_count == tile.MineCount)
-                // Clicking a flag does nothing so this is safe.
-                ClickNeighbours(tile: tile);
-        }
+        // public void ExpandIfFlagged(Tile tile)
+        // {
+        //     int location = _tiles.IndexOf(item: tile);
+        //     // Get the number of flags.
+        //     int flag_count = 0;
+        //     foreach (int pos in GetNeighbours(pos: location))
+        //         if (_tiles[index: pos].IsFlagged)
+        //             flag_count++;
+        //
+        //     // If we have the right number click surrounding tiles.
+        //     if (flag_count == tile.MineCount)
+        //         // Clicking a flag does nothing so this is safe.
+        //         ClickNeighbours(tile: tile);
+        // }
 
         public void ClickNeighbours(Tile tile)
         {
@@ -155,9 +155,9 @@ namespace HentaiGame
                 _tiles[index: pos].OpenRecursive();
         }
 
-        public void GameOver()
-        {
-            Debug.Log("Game Over");
-        }
+        // public void GameOver()
+        // {
+        //     Debug.Log("Game Over");
+        // }
     }
 }

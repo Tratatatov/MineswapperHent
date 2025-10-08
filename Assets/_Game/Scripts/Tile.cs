@@ -6,11 +6,12 @@ namespace HentaiGame
     [RequireComponent(typeof(SpriteRenderer))]
     public class Tile : MonoBehaviour
     {
+        [SerializeField] private SpriteRenderer _foregroundSpriteRenderer;
         [SerializeField] private SpriteRenderer _backGroundSpriteRenderer;
-
         private Sprite _backgroundTile;
         private Board _board;
         private CharacterOnBoard _characterOnBoard;
+        private CharacterStatsView _characterStatsView;
         private List<Sprite> _clickedTiles;
         private Sprite _doorSprite;
         private Sprite _flaggedTile;
@@ -59,6 +60,7 @@ namespace HentaiGame
             _unclickedTiles = tileSpritesData.UnclickedTiles;
             _clickedTiles = tileSpritesData.ClickedTiles;
             _backGroundSpriteRenderer.sprite = tileSpritesData.GetRandomBackgroundTile();
+            _characterStatsView = ServiceLocator.Get<CharacterStatsView>();
         }
 
         public void SetMine(bool value)
@@ -66,27 +68,17 @@ namespace HentaiGame
             IsMine = value;
         }
 
-        public void SetActive(bool value)
-        {
-            CanBeClicked = value;
-        }
-
         public void Open()
         {
-            if (!CanBeClicked || IsFlagged)
+            if (CantBeClicked())
                 return;
 
             CanBeClicked = false;
 
-            if (IsMine)
-            {
-                _spriteRenderer.sprite = _mineTile;
-            }
-            else
-            {
-                _spriteRenderer.sprite = _clickedTiles[index: MineCount];
-                _backGroundSpriteRenderer.enabled = true;
-            }
+            _spriteRenderer.sprite = _clickedTiles[index: MineCount];
+            _foregroundSpriteRenderer.enabled = false;
+            _backGroundSpriteRenderer.enabled = true;
+            _characterStatsView.DecreaseTurns();
         }
 
         public void SetMineCount(int value)
@@ -117,14 +109,19 @@ namespace HentaiGame
 
         private void SetFlag()
         {
-            IsFlagged = !IsFlagged;
-            if (IsFlagged)
+            if (!IsFlagged)
             {
+                if (_characterStatsView.DataLevel.Flags <= 0)
+                    return;
+                _characterStatsView.DecreaseFlags();
                 _spriteRenderer.sprite = _flaggedTile;
+                IsFlagged = true;
             }
             else
             {
                 _spriteRenderer.sprite = _unclickedTile;
+                _characterStatsView.IncreaseFlags();
+                IsFlagged = false;
             }
         }
 
@@ -149,9 +146,10 @@ namespace HentaiGame
 
             if (IsMine)
                 Booom();
+
             else
                 //OpenRecursive();
-                OpenTile();
+                Open();
             //if (!CanBeClicked && MineCount > 0) _board.ExpandIfFlagged(this);
         }
 
@@ -160,17 +158,12 @@ namespace HentaiGame
             return !CanBeClicked || IsFlagged;
         }
 
-        private void OpenTile()
-        {
-            Open();
-
-            //_board.CheckGameOver();
-        }
-
         private void Booom()
         {
             _spriteRenderer.sprite = _mineHitTile;
             CanBeClicked = false;
+            _characterStatsView.DecreaseTurns();
+            _characterStatsView.DecreaseHp();
         }
 
         private void MoveCharacter()

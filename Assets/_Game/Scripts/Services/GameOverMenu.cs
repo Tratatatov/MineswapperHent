@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,18 +7,23 @@ namespace HentaiGame
     {
         [SerializeField] private Button _resetGame;
         [SerializeField] private Button _goToMainMenu;
+        private ChangeSceneService _changeSceneService;
 
         private void OnEnable()
         {
-            _resetGame.onClick.AddListener(call: ChangeSceneService.ResetLevel);
-            _goToMainMenu.onClick.AddListener(call: ChangeSceneService.GoToMainMenu);
+            _resetGame.onClick.AddListener(call: _changeSceneService.ResetLevel);
+            _goToMainMenu.onClick.AddListener(call: _changeSceneService.GoToMainMenu);
         }
 
         private void OnDisable()
         {
-            _resetGame.onClick.RemoveListener(call: ChangeSceneService.ResetLevel);
-            _goToMainMenu.onClick.RemoveListener(call: ChangeSceneService.GoToMainMenu);
+            _resetGame.onClick.RemoveListener(call: _changeSceneService.ResetLevel);
+            _goToMainMenu.onClick.RemoveListener(call: _changeSceneService.GoToMainMenu);
         }
 
+        public void Initialize(ChangeSceneService changeSceneService)
+        {
+            _changeSceneService = changeSceneService;
+        }
     }
 }

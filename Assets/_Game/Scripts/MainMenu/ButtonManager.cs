@@ -9,6 +9,14 @@ namespace HentaiGame
         [SerializeField] private Button _settingsButton;
         [SerializeField] private Button _exitButton;
         [SerializeField] private Button _marketButton;
+        private ChangeSceneService _changeSceneService;
+        private PlayerData _playerData;
+        private PlayerDataPersistance _playerDataPersistance;
+
+        private void Start()
+        {
+            _changeSceneService = ServiceLocator.Get<ChangeSceneService>();
+        }
 
         private void OnEnable()
         {
@@ -23,7 +31,7 @@ namespace HentaiGame
 
         private void StartGame()
         {
-            ChangeSceneService.GoToLevel(2); // Load saved scene
+            _changeSceneService.GoToLevel(2); // Load saved scene
         }
     }
 }
