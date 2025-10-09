@@ -9,30 +9,29 @@ public class CharacterStatsView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _levelText;
     [SerializeField] private TextMeshProUGUI _flagsText;
     [SerializeField] private TextMeshProUGUI _turnsText;
-    private PlayerDataLevel _playerDataLevel;
     private PlayerDataPersistance _playerDataPersistance;
 
-    public PlayerDataLevel DataLevel => _playerDataLevel;
+    public PlayerDataLevel PlayerDataLevel { get; private set; }
 
     private void Start()
     {
-        _playerDataLevel = ServiceLocator.Get<PlayerDataLevel>();
+        PlayerDataLevel = ServiceLocator.Get<PlayerDataLevel>();
         _playerDataPersistance = ServiceLocator.Get<PlayerDataPersistance>();
         UpdateStatsText();
     }
 
     public void DecreaseTurns()
     {
-        _playerDataLevel.Turns--;
+        PlayerDataLevel.Turns--;
         UpdateStatsText();
-        if (_playerDataLevel.Turns <= 0) GameEvents.OnTurnOver?.Invoke();
+        if (PlayerDataLevel.Turns <= 0) GameEvents.OnTurnOver?.Invoke();
     }
 
     public void DecreaseHp()
     {
         _playerDataPersistance.HP--;
         UpdateStatsText();
-        if (_playerDataLevel.Turns <= 0) GameEvents.OnGameOver?.Invoke();
+        if (_playerDataPersistance.HP <= 0) GameEvents.OnGameOver?.Invoke();
     }
 
 
@@ -44,20 +43,20 @@ public class CharacterStatsView : MonoBehaviour
 
     public void IncreaseFlags()
     {
-        _playerDataLevel.Flags++;
+        PlayerDataLevel.Flags++;
         UpdateStatsText();
     }
 
-    public void  DecreaseFlags()
+    public void DecreaseFlags()
     {
-        _playerDataLevel.Flags--;
+        PlayerDataLevel.Flags--;
         UpdateStatsText();
     }
 
     private void UpdateStatsText()
     {
-        _turnsText.text = $"Turns: {_playerDataLevel.Turns}";
-        _flagsText.text = $"Flags: {_playerDataLevel.Flags}";
+        _turnsText.text = $"Turns: {PlayerDataLevel.Turns}";
+        _flagsText.text = $"Flags: {PlayerDataLevel.Flags}";
         _coinsText.text = $"Coins: {_playerDataPersistance.Coins}";
         _levelText.text = $"Level: {_playerDataPersistance.Level}";
         _hpText.text = $"HP: {_playerDataPersistance.HP}";

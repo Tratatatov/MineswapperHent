@@ -1,5 +1,8 @@
+using System;
+
 namespace HentaiGame
 {
+    [Serializable]
     public class PlayerDataPersistance
     {
         public int Coins;

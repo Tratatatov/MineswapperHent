@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace HentaiGame
 {
+    [Serializable]
     public class PlayerData
     {
         private readonly List<string> _dataNames = new()

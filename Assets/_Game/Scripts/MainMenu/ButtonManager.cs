@@ -12,10 +12,12 @@ namespace HentaiGame
         private ChangeSceneService _changeSceneService;
         private PlayerData _playerData;
         private PlayerDataPersistance _playerDataPersistance;
+        private SaveManager _saveManager;
 
         private void Start()
         {
             _changeSceneService = ServiceLocator.Get<ChangeSceneService>();
+            _saveManager = ServiceLocator.Get<SaveManager>();
         }
 
         private void OnEnable()
@@ -31,6 +33,7 @@ namespace HentaiGame
 
         private void StartGame()
         {
+            _saveManager.LoadAll();
             _changeSceneService.GoToLevel(2); // Load saved scene
         }
     }

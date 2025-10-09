@@ -111,7 +111,7 @@ namespace HentaiGame
         {
             if (!IsFlagged)
             {
-                if (_characterStatsView.DataLevel.Flags <= 0)
+                if (_characterStatsView.PlayerDataLevel.Flags <= 0)
                     return;
                 _characterStatsView.DecreaseFlags();
                 _spriteRenderer.sprite = _flaggedTile;

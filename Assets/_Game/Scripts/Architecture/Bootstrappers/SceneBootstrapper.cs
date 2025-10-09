@@ -11,8 +11,6 @@ namespace HentaiGame
         private CharacterStatsView _characterStatsView;
         private GameOverMenu _gameOverMenu;
         private GameOverService _gameOverService;
-        private MoneyService _moneyService;
-        private PlayerController _playerController;
         private PlayerDataLevel _playerDataLevel;
 
         private void Awake()
