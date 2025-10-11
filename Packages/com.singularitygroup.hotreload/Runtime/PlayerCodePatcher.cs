@@ -4,66 +4,85 @@ using System.Threading;
 using System.Threading.Tasks;
 using SingularityGroup.HotReload.DTO;
 
-namespace SingularityGroup.HotReload {
-    
-    static class PlayerCodePatcher {
-        static Timer timer;
+namespace SingularityGroup.HotReload
+{
+    internal static class PlayerCodePatcher
+    {
+        private static Timer timer;
 
-        static PlayerCodePatcher() {
-            if (PlayerEntrypoint.IsPlayerWithHotReload()) {
-                timer = new Timer(OnIntervalThreaded, (Action) OnIntervalMainThread, 500, 500);
+        private static DateTime serverHealthyAt;
+
+        private static string lastPatchId = string.Empty;
+
+        static PlayerCodePatcher()
+        {
+            if (PlayerEntrypoint.IsPlayerWithHotReload())
+            {
+                timer = new Timer(OnIntervalThreaded, (Action)OnIntervalMainThread, 500, 500);
                 serverHealthyAt = DateTime.MinValue;
             }
         }
 
-        private static DateTime serverHealthyAt;
-        private static TimeSpan TimeSinceServerHealthy() => DateTime.UtcNow - serverHealthyAt;
+        private static TimeSpan TimeSinceServerHealthy()
+        {
+            return DateTime.UtcNow - serverHealthyAt;
+        }
 
         /// <summary>
-        /// Set server that you want to try connect to.
+        ///     Set server that you want to try connect to.
         /// </summary>
         /// <remarks>
-        /// <para>
-        /// This allows repetitions of:
-        /// - try handshake
-        ///   - success -> try healthcheck
-        ///   - success -> poll method patches
-        ///   - 
-        /// </para>
-        /// <para>
-        /// Only do this after confirming (with /handshake) that server is compatible with this build.<br/>
-        /// The user will be prompted if handshake needs confirmation.
-        /// </para>
+        ///     <para>
+        ///         This allows repetitions of:
+        ///         - try handshake
+        ///         - success -> try healthcheck
+        ///         - success -> poll method patches
+        ///         -
+        ///     </para>
+        ///     <para>
+        ///         Only do this after confirming (with /handshake) that server is compatible with this build.<br />
+        ///         The user will be prompted if handshake needs confirmation.
+        ///     </para>
         /// </remarks>
-        internal static Task<ServerHandshake.Result> UpdateHost(PatchServerInfo serverInfo) {
+        internal static Task<ServerHandshake.Result> UpdateHost(PatchServerInfo serverInfo)
+        {
             Log.Debug($"UpdateHost to {(serverInfo == null ? "null" : serverInfo.hostName)}");
             // In player builds, server is remote, se we don't load assemblies from any paths
             RequestHelper.ChangeAssemblySearchPaths(Array.Empty<string>());
             ServerHealthCheck.I.SetServerInfo(null); // stop doing health check on old server
             RequestHelper.SetServerInfo(serverInfo);
             // Show feedback about connection progress (handshake can take ~5 seconds for our big game)
-            if (serverInfo == null) {
+            if (serverInfo == null)
+            {
                 Prompts.SetConnectionState(ConnectionSummary.Disconnected);
-            } else {
+            }
+            else
+            {
                 Prompts.SetConnectionState(ConnectionSummary.Connected);
                 Prompts.ShowConnectionDialog();
             }
+
             return ServerHandshake.I.SetServerInfo(serverInfo);
         }
 
-        public static Task Disconnect() => UpdateHost(null);
+        public static Task Disconnect()
+        {
+            return UpdateHost(null);
+        }
 
-        static void OnIntervalThreaded(object o) {
+        private static void OnIntervalThreaded(object o)
+        {
             ServerHandshake.I.CheckHandshake();
             ServerHealthCheck.I.CheckHealthAsync().Forget();
 
             ThreadUtility.RunOnMainThread((Action)o);
         }
-        
-        static string lastPatchId = string.Empty;
-        static void OnIntervalMainThread() {
+
+        private static void OnIntervalMainThread()
+        {
             PatchServerInfo verifiedServer;
-            if(ServerHandshake.I.TryGetVerifiedServer(out verifiedServer)) {
+            if (ServerHandshake.I.TryGetVerifiedServer(out verifiedServer))
+            {
                 // now that handshake verified, we are connected.
                 // Note: If there is delay between handshake done and chosing to connect, then it may be outdated.
                 Prompts.SetConnectionState(ConnectionSummary.Connecting);
@@ -71,21 +90,29 @@ namespace SingularityGroup.HotReload {
                 ServerHealthCheck.I.SetServerInfo(verifiedServer);
             }
 
-            if(ServerHealthCheck.I.IsServerHealthy) {
+            if (ServerHealthCheck.I.IsServerHealthy)
+            {
                 // we may have reconnected to the same host, after losing connection for several seconds
                 Prompts.SetConnectionState(ConnectionSummary.Connected, false);
                 serverHealthyAt = DateTime.UtcNow;
                 RequestHelper.PollMethodPatches(lastPatchId, resp => HandleResponseReceived(resp));
-            } else if (ServerHealthCheck.I.WasServerResponding) { // only update prompt state if disconnected server 
+            }
+            else if (ServerHealthCheck.I.WasServerResponding)
+            {
+                // only update prompt state if disconnected server 
                 var secondsSinceHealthy = TimeSinceServerHealthy().TotalSeconds;
                 var reconnectTimeout = 30; // seconds
-                if (secondsSinceHealthy > 2) {
+                if (secondsSinceHealthy > 2)
+                {
                     Log.Info("Hot Reload was unreachable for 5 seconds, trying to reconnect...");
                     // feedback for the user so they know why patches are not applying
-                    Prompts.SetConnectionState($"{ConnectionSummary.TryingToReconnect} {reconnectTimeout - secondsSinceHealthy:F0}s", false);
+                    Prompts.SetConnectionState(
+                        $"{ConnectionSummary.TryingToReconnect} {reconnectTimeout - secondsSinceHealthy:F0}s", false);
                     Prompts.ShowConnectionDialog();
                 }
-                if (secondsSinceHealthy > reconnectTimeout) {
+
+                if (secondsSinceHealthy > reconnectTimeout)
+                {
                     // give up on the server, give user a way to connect to another
                     Log.Info($"Hot Reload was unreachable for {reconnectTimeout} seconds, disconnecting");
                     var disconnectedServer = RequestHelper.ServerInfo;
@@ -96,23 +123,21 @@ namespace SingularityGroup.HotReload {
                 }
             }
         }
-        
-        static void HandleResponseReceived(MethodPatchResponse response) {
-            Log.Debug("PollMethodPatches handling MethodPatchResponse id:{0} response.patches.Length:{1} response.failures.Length:{2}",
+
+        private static void HandleResponseReceived(MethodPatchResponse response)
+        {
+            Log.Debug(
+                "PollMethodPatches handling MethodPatchResponse id:{0} response.patches.Length:{1} response.failures.Length:{2}",
                 response.id, response.patches.Length, response.failures.Length);
             // TODO handle new response data (removed methods etc.)
-            if(response.patches.Length > 0) {
-                CodePatcher.I.RegisterPatches(response, persist: true);
-            }
-            if(response.failures.Length > 0) {
-                foreach (var failure in response.failures) {
+            if (response.patches.Length > 0) CodePatcher.I.RegisterPatches(response, true);
+            if (response.failures.Length > 0)
+                foreach (var failure in response.failures)
                     // feedback to user so they know why their patch wasn't applied
                     Log.Warning(failure);
-                }
-            }
+
             lastPatchId = response.id;
         }
     }
-
 }
 #endif

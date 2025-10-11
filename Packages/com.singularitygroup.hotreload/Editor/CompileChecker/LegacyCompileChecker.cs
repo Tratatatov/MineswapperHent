@@ -25,7 +25,8 @@ namespace SingularityGroup.HotReload.Editor {
                 }
                 if(File.Exists(timestampFilePath)) {
                     var lastTimestampStr = File.ReadAllText(timestampFilePath);
-                    var lastTimestamp = DateTime.ParseExact(lastTimestampStr, "o", CultureInfo.CurrentCulture).ToUniversalTime();
+                    var lastTimestamp =
+ DateTime.ParseExact(lastTimestampStr, "o", CultureInfo.CurrentCulture).ToUniversalTime();
                     if(currentCompileTimestamp > lastTimestamp) {
                         ThreadUtility.RunOnMainThread(() => {
                             recompile = true;
