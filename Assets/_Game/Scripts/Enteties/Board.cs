@@ -1,163 +1,361 @@
 using System.Collections.Generic;
 using System.Linq;
+using HentaiGame;
 using UnityEngine;
 
-namespace HentaiGame
+
+public class Board
 {
-    public class Board
+    private readonly int _width;
+    private readonly int _height;
+    private readonly int _numMines;
+    private readonly List<Tile> _tiles;
+    private CharacterOnBoard _characterOnBoard;
+
+    // Конструктор: принимает только готовый список тайлов (чистая логика)
+    public Board(int width, int height, int numMines, List<Tile> tiles)
     {
-        private readonly Transform _gameHolder;
-        private readonly int _height;
-        private readonly int _numMines;
-        private readonly Tile _tilePrefab;
-        private readonly List<Tile> _tiles = new();
-        private readonly float _tileSize = 0.5f;
-        private readonly int _width;
-        private readonly CharacterOnBoard _characterOnBoard;
-        private readonly TileSpritesData _tileSpritesData;
+        _width = width;
+        _height = height;
+        _numMines = numMines;
+        _tiles = tiles;
+    }
 
-        public Board(BoardConfig boardConfig, Tile tilePrefab, Transform gameHolder, CharacterOnBoard characterOnBoard,
-            TileSpritesData tileSpritesData)
+    // Логика игры (мины, клики и т.д.) — без создания объектов
+    public void ResetGameState()
+    {
+        // Randomly shuffle the tile positions to get indices for mine positions.
+        int[] minePositions = Enumerable.Range(0, _tiles.Count).OrderBy(x => Random.Range(0.0f, 1.0f)).ToArray();
+
+        // Set mines at the first numMines positions.
+        for (int i = 0; i < _numMines; i++)
         {
-            _tileSpritesData = tileSpritesData;
-            _characterOnBoard = characterOnBoard;
-            _width = boardConfig.Width;
-            _height = boardConfig.Height;
-            _numMines = boardConfig.NumMines;
-            _tilePrefab = tilePrefab;
-            _gameHolder = gameHolder;
+            int pos = minePositions[i];
+            _tiles[pos].SetMine(true);
         }
 
-        public void CreateGameBoard(int width, int height, int numMines)
+        // Update all the tiles to hold the correct number of mines.
+        for (int i = 0; i < _tiles.Count; i++)
+            _tiles[i].SetMineCount(HowManyMines(i));
+    }
+
+    private int HowManyMines(int location)
+    {
+        int count = 0;
+        foreach (int pos in GetNeighbours(location))
+            if (_tiles[pos].IsMine)
+                count++;
+        return count;
+    }
+
+    private List<int> GetNeighbours(int pos)
+    {
+        List<int> neighbours = new();
+        int row = pos / _width;
+        int col = pos % _width;
+        // (0,0) is bottom left.
+        if (row < _height - 1)
         {
-            // Create the array of tiles.
-            for (int row = 0; row < height; row++)
-            for (int col = 0; col < width; col++)
-            {
-                // Position the tile in the correct place (centred).
-                Tile newTile = GameObject.Instantiate(original: _tilePrefab);
-                newTile.Initialize(characterOnBoard: _characterOnBoard, tileSpritesData: _tileSpritesData, this);
-                newTile.transform.parent = _gameHolder;
-                float xIndex = col - (width - 1) / 2.0f;
-                float yIndex = row - (height - 1) / 2.0f;
-                newTile.transform.localPosition = new Vector2(xIndex * _tileSize, yIndex * _tileSize);
-                // Keep a reference to the tile for setting up the game.
-                _tiles.Add(item: newTile);
-                //tile.gameManager = this;
-            }
+            neighbours.Add(pos + _width); // North
+            if (col > 0) neighbours.Add(pos + _width - 1); // North-West
+            if (col < _width - 1) neighbours.Add(pos + _width + 1); // North-East
         }
 
-        public void ResetGameState()
+        if (col > 0) neighbours.Add(pos - 1); // West
+        if (col < _width - 1) neighbours.Add(pos + 1); // East
+        if (row > 0)
         {
-            // Randomly shuffle the tile positions to get indices for mine positions.
-            int[] minePositions = Enumerable.Range(0, count: _tiles.Count).OrderBy(x => Random.Range(0.0f, 1.0f))
-                .ToArray();
-
-            // Set mines at the first numMines positions.
-            for (int i = 0; i < _numMines; i++)
-            {
-                int pos = minePositions[i];
-                _tiles[index: pos].SetMine(true);
-            }
-
-            // Update all the tiles to hold the correct number of mines.
-            for (int i = 0; i < _tiles.Count; i++) _tiles[index: i].SetMineCount(HowManyMines(location: i));
+            neighbours.Add(pos - _width); // South
+            if (col > 0) neighbours.Add(pos - _width - 1); // South-West
+            if (col < _width - 1) neighbours.Add(pos - _width + 1); // South-East
         }
 
-        // Given a location work out how many mines are surrounding it.
-        private int HowManyMines(int location)
-        {
-            int count = 0;
-            foreach (int pos in GetNeighbours(pos: location))
-                if (_tiles[index: pos].IsMine)
-                    count++;
+        return neighbours;
+    }
 
-            return count;
-        }
-
-        // Given a position, return the positions of all neighbours.
-        private List<int> GetNeighbours(int pos)
-        {
-            List<int> neighbours = new();
-            int row = pos / _width;
-            int col = pos % _width;
-            // (0,0) is bottom left.
-            if (row < _height - 1)
-            {
-                neighbours.Add(pos + _width); // North
-                if (col > 0) neighbours.Add(pos + _width - 1); // North-West
-                if (col < _width - 1) neighbours.Add(pos + _width + 1); // North-East
-            }
-
-            if (col > 0) neighbours.Add(pos - 1); // West
-            if (col < _width - 1) neighbours.Add(pos + 1); // East
-            if (row > 0)
-            {
-                neighbours.Add(pos - _width); // South
-                if (col > 0) neighbours.Add(pos - _width - 1); // South-West
-                if (col < _width - 1) neighbours.Add(pos - _width + 1); // South-East
-            }
-
-            return neighbours;
-        }
-
-        // public void ClickNeighbours(Tile tile)
-        // {
-        //     var location = _tiles.IndexOf(tile);
-        //     foreach (var pos in GetNeighbours(location)) _tiles[pos].OnClick();
-        // }
-        //
-        // public void GameOver()
-        // {
-        //     // Disable clicks on all mines.
-        //     foreach (var tile in _tiles) tile.ShowGameOverState();
-        // }
-
-        // public void CheckGameOver()
-        // {
-        //     // If there are numMines left active then we're done.
-        //     // int count = 0;
-        //     // foreach (Tile tile in _tiles)
-        //     //     if (tile.CanBeClicked)
-        //     //         count++;
-        //     //
-        //     // if (count == _numMines)
-        //     // {
-        //     //     Debug.Log("Winner!");
-        //     //     foreach (Tile tile in _tiles)
-        //     //     {
-        //     //         tile.SetActive(false);
-        //     //         tile.SetFlaggedIfMine();
-        //     //     }
-        //     // }
-        // }
-
-        // Click on all surrounding tiles if mines are all flagged.
-        // public void ExpandIfFlagged(Tile tile)
-        // {
-        //     int location = _tiles.IndexOf(item: tile);
-        //     // Get the number of flags.
-        //     int flag_count = 0;
-        //     foreach (int pos in GetNeighbours(pos: location))
-        //         if (_tiles[index: pos].IsFlagged)
-        //             flag_count++;
-        //
-        //     // If we have the right number click surrounding tiles.
-        //     if (flag_count == tile.MineCount)
-        //         // Clicking a flag does nothing so this is safe.
-        //         ClickNeighbours(tile: tile);
-        // }
-
-        public void ClickNeighbours(Tile tile)
-        {
-            int location = _tiles.IndexOf(item: tile);
-            foreach (int pos in GetNeighbours(pos: location))
-                _tiles[index: pos].OpenRecursive();
-        }
-
-        // public void GameOver()
-        // {
-        //     Debug.Log("Game Over");
-        // }
+    public void ClickNeighbours(Tile tile)
+    {
+        int location = _tiles.IndexOf(tile);
+        foreach (int pos in GetNeighbours(location))
+            _tiles[pos].OpenRecursive();
     }
 }
+
+
+// using System.Collections.Generic;
+// using System.Linq;
+// using HentaiGame;
+// using UnityEngine;
+//
+// // public class BoardFactory
+// // {
+//     // private BoardConfig _boardConfig;
+//     // private TileFactory _tileFactory;
+//     // private TileHolder _tileHolder;
+//     //
+//     // public Board Get(int width, int height, int numMines)
+//     // {
+//     //     Board newBoard = new();
+//     //     for (int row = 0; row < height; row++)
+//     //     for (int col = 0; col < width; col++)
+//     //     {
+//     //         // Position the tile in the correct place (centred).
+//     //         Tile newTile = _tileFactory.Get();
+//     //         newTile.Initialize(board: newBoard);
+//     //         newTile.transform.parent = _gameHolder;
+//     //         float xIndex = col - (width - 1) / 2.0f;
+//     //         float yIndex = row - (height - 1) / 2.0f;
+//     //         newTile.transform.localPosition = new Vector2(xIndex * _tileSize, yIndex * _tileSize);
+//     //         _tiles.Add(item: newTile);
+//     //     }
+//     // }
+//     public class BoardFactory
+//     {
+//         [Inject] private BoardConfig _boardConfig;  // Инъекция конфига (если используется)
+//         [Inject] private TileFactory _tileFactory;  // Инъекция фабрики тайлов (теперь "содержится" здесь)
+//         [Inject] private TileHolder _tileHolder;    // Инъекция держателя тайлов (Transform для родителя)
+//
+//         private const float _tileSize = 0.5f;  // Константа размера тайла
+//
+//         // Метод фабрики: создаёт и настраивает Board
+//         public Board Get(int width, int height, int numMines)
+//         {
+//             // Создаём список тайлов через TileFactory (здесь, в фабрике)
+//             List<Tile> tiles = new();
+//             for (int row = 0; row < height; row++)
+//             for (int col = 0; col < width; col++)
+//             {
+//                 Tile newTile = _tileFactory.Get();  // Создание тайла через фабрику
+//                 newTile.transform.SetParent(_tileHolder);  // Установка родителя
+//                 float xIndex = col - (width - 1) / 2.0f;
+//                 float yIndex = row - (height - 1) / 2.0f;
+//                 newTile.transform.localPosition = new Vector2(xIndex * _tileSize, yIndex * _tileSize);
+//                 tiles.Add(newTile);  // Добавление в список
+//             }
+//
+//             // Создаём Board, передавая готовый список тайлов
+//             Board newBoard = new Board(width, height, numMines, tiles);
+//         
+//             // Настройка: инициализация тайлов и начальное состояние
+//             foreach (Tile tile in tiles)
+//                 tile.Initialize(board: newBoard);
+//             newBoard.ResetGameState();
+//         
+//             return newBoard;
+//         }
+//     }
+//
+//
+//
+// //     public class Board
+// //     {
+// //         private readonly int _height;
+// //         private readonly int _numMines;
+// //         private readonly List<Tile> _tiles = new();
+// //         private readonly int _width;
+// //         private CharacterOnBoard _characterOnBoard;
+// //
+// //         public void ResetGameState()
+// //         {
+// //             // Randomly shuffle the tile positions to get indices for mine positions.
+// //             int[] minePositions = Enumerable.Range(0, count: _tiles.Count).OrderBy(x => Random.Range(0.0f, 1.0f))
+// //                 .ToArray();
+// //
+// //             // Set mines at the first numMines positions.
+// //             for (int i = 0; i < _numMines; i++)
+// //             {
+// //                 int pos = minePositions[i];
+// //                 _tiles[index: pos].SetMine(true);
+// //             }
+// //
+// //             // Update all the tiles to hold the correct number of mines.
+// //             for (int i = 0; i < _tiles.Count; i++) _tiles[index: i].SetMineCount(HowManyMines(location: i));
+// //         }
+// //
+// //         // Given a location work out how many mines are surrounding it.
+// //         private int HowManyMines(int location)
+// //         {
+// //             int count = 0;
+// //             foreach (int pos in GetNeighbours(pos: location))
+// //                 if (_tiles[index: pos].IsMine)
+// //                     count++;
+// //
+// //             return count;
+// //         }
+// //
+// //         // Given a position, return the positions of all neighbours.
+// //         private List<int> GetNeighbours(int pos)
+// //         {
+// //             List<int> neighbours = new();
+// //             int row = pos / _width;
+// //             int col = pos % _width;
+// //             // (0,0) is bottom left.
+// //             if (row < _height - 1)
+// //             {
+// //                 neighbours.Add(pos + _width); // North
+// //                 if (col > 0) neighbours.Add(pos + _width - 1); // North-West
+// //                 if (col < _width - 1) neighbours.Add(pos + _width + 1); // North-East
+// //             }
+// //
+// //             if (col > 0) neighbours.Add(pos - 1); // West
+// //             if (col < _width - 1) neighbours.Add(pos + 1); // East
+// //             if (row > 0)
+// //             {
+// //                 neighbours.Add(pos - _width); // South
+// //                 if (col > 0) neighbours.Add(pos - _width - 1); // South-West
+// //                 if (col < _width - 1) neighbours.Add(pos - _width + 1); // South-East
+// //             }
+// //
+// //             return neighbours;
+// //         }
+// //
+// //         public void ClickNeighbours(Tile tile)
+// //         {
+// //             int location = _tiles.IndexOf(item: tile);
+// //             foreach (int pos in GetNeighbours(pos: location))
+// //                 _tiles[index: pos].OpenRecursive();
+// //         }
+// //     }
+// // }
+// //
+// //         public class Board
+// //         {
+// //             private readonly int _height;
+// //             private readonly int _numMines;
+// //             private readonly List<Tile> _tiles = new();
+// //             private readonly float _tileSize = 0.5f;
+// //             private readonly int _width;
+// //             private BoardConfig _boardConfig;
+// //             private CharacterOnBoard _characterOnBoard;
+// //
+// //             [Inject]
+// //             public Board(CharacterOnBoard characterOnBoard)
+// //             {
+// //                 _characterOnBoard = characterOnBoard;
+// //                 _height = boardConfig.Height;
+// //                 _numMines = NumMines;
+// //             }
+// //         }
+// //     }
+// // }
+//
+// // using System.Collections.Generic;
+// // using System.Linq;
+// // using UnityEngine;
+// // using Zenject;
+// //
+// // namespace HentaiGame
+// // {
+// //     public class Board
+// //     {
+// //         private readonly List<Tile> _tiles = new();
+// //         private readonly float _tileSize = 0.5f;
+// //         private CharacterOnBoard _characterOnBoard;
+// //         private Transform _gameHolder;
+// //         private int _height;
+// //         private int _numMines;
+// //         private TileFactory _tileFactory;
+// //         private TileSpritesDataConfig _tileSpritesDataConfig;
+// //         private int _width;
+// //
+// //         [Inject]
+// //         public Board(TileFactory tileFactory)
+// //         {
+// //             _tileFactory = tileFactory;
+// //         }
+// //
+// //         [Inject]
+// //         public void Construct(BoardConfig boardConfig, Tile tilePrefab, TileHolder gameHolder,
+// //             CharacterOnBoard characterOnBoard,
+// //             TileSpritesDataConfig tileSpritesDataConfig)
+// //         {
+// //             _tileSpritesDataConfig = tileSpritesDataConfig;
+// //             _characterOnBoard = characterOnBoard;
+// //             _width = boardConfig.Width;
+// //             _height = boardConfig.Height;
+// //             _numMines = boardConfig.NumMines;
+// //             _tilePrefab = tilePrefab;
+// //             _gameHolder = gameHolder.transform;
+// //         }
+// //
+// //         public void CreateGameBoard(int width, int height, int numMines)
+// //         {
+// //             // Create the array of tiles.
+// //             for (int row = 0; row < height; row++)
+// //             for (int col = 0; col < width; col++)
+// //             {
+// //                 // Position the tile in the correct place (centred).
+// //                 Tile newTile = GameObject.Instantiate(original: _tilePrefab);
+// //                 newTile.Initialize(this);
+// //                 newTile.transform.parent = _gameHolder;
+// //                 float xIndex = col - (width - 1) / 2.0f;
+// //                 float yIndex = row - (height - 1) / 2.0f;
+// //                 newTile.transform.localPosition = new Vector2(xIndex * _tileSize, yIndex * _tileSize);
+// //                 // Keep a reference to the tile for setting up the game.
+// //                 _tiles.Add(item: newTile);
+// //                 //tile.gameManager = this;
+// //             }
+// //         }
+// //
+// //         public void ResetGameState()
+// //         {
+// //             // Randomly shuffle the tile positions to get indices for mine positions.
+// //             int[] minePositions = Enumerable.Range(0, count: _tiles.Count).OrderBy(x => Random.Range(0.0f, 1.0f))
+// //                 .ToArray();
+// //
+// //             // Set mines at the first numMines positions.
+// //             for (int i = 0; i < _numMines; i++)
+// //             {
+// //                 int pos = minePositions[i];
+// //                 _tiles[index: pos].SetMine(true);
+// //             }
+// //
+// //             // Update all the tiles to hold the correct number of mines.
+// //             for (int i = 0; i < _tiles.Count; i++) _tiles[index: i].SetMineCount(HowManyMines(location: i));
+// //         }
+// //
+// //         // Given a location work out how many mines are surrounding it.
+// //         private int HowManyMines(int location)
+// //         {
+// //             int count = 0;
+// //             foreach (int pos in GetNeighbours(pos: location))
+// //                 if (_tiles[index: pos].IsMine)
+// //                     count++;
+// //
+// //             return count;
+// //         }
+// //
+// //         // Given a position, return the positions of all neighbours.
+// //         private List<int> GetNeighbours(int pos)
+// //         {
+// //             List<int> neighbours = new();
+// //             int row = pos / _width;
+// //             int col = pos % _width;
+// //             // (0,0) is bottom left.
+// //             if (row < _height - 1)
+// //             {
+// //                 neighbours.Add(pos + _width); // North
+// //                 if (col > 0) neighbours.Add(pos + _width - 1); // North-West
+// //                 if (col < _width - 1) neighbours.Add(pos + _width + 1); // North-East
+// //             }
+// //
+// //             if (col > 0) neighbours.Add(pos - 1); // West
+// //             if (col < _width - 1) neighbours.Add(pos + 1); // East
+// //             if (row > 0)
+// //             {
+// //                 neighbours.Add(pos - _width); // South
+// //                 if (col > 0) neighbours.Add(pos - _width - 1); // South-West
+// //                 if (col < _width - 1) neighbours.Add(pos - _width + 1); // South-East
+// //             }
+// //
+// //             return neighbours;
+// //         }
+// //
+// //         public void ClickNeighbours(Tile tile)
+// //         {
+// //             int location = _tiles.IndexOf(item: tile);
+// //             foreach (int pos in GetNeighbours(pos: location))
+// //                 _tiles[index: pos].OpenRecursive();
+// //         }
+// //     }
+// // }

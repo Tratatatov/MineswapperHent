@@ -11,5 +11,10 @@ namespace HentaiGame
         public int Level;
         public int MaxHP;
         public int MaxTurns;
+
+        public void RestartLevel()
+        {
+        }
+        
     }
 }

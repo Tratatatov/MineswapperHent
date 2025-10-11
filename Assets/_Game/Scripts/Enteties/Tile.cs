@@ -6,19 +6,20 @@ namespace HentaiGame
     [RequireComponent(typeof(SpriteRenderer))]
     public class Tile : MonoBehaviour
     {
-        [SerializeField] private SpriteRenderer _foregroundSpriteRenderer;
         [SerializeField] private SpriteRenderer _backGroundSpriteRenderer;
+        [SerializeField] private SpriteRenderer _flagSpriteRenderer;
+        [SerializeField] private TileSpritesDataConfig _tileSpritesDataConfig;
+        [SerializeField] private SpriteRenderer _foregroundSpriteRenderer;
         private Sprite _backgroundTile;
         private Board _board;
         private CharacterOnBoard _characterOnBoard;
         private CharacterStatsView _characterStatsView;
         private List<Sprite> _clickedTiles;
-        private Sprite _doorSprite;
         private Sprite _flaggedTile;
         private Sprite _mineHitTile;
         private Sprite _mineTile;
         private Sprite _mineWrongTile;
-        private SpriteRenderer _spriteRenderer;
+        private PlayerDataLevel _playerDataLevel;
         private Sprite _unclickedTile;
 
         private List<Sprite> _unclickedTiles;
@@ -35,32 +36,45 @@ namespace HentaiGame
 
         private void OnMouseOver()
         {
-            if (GlobalState.GameState == GameState.GameOver || !CanBeClicked) return;
+            if (GameManager.Instance.GameOverService.IsGameOver || !CanBeClicked) return;
 
             if (Input.GetMouseButton(0))
+            {
+                Debug.Log("Клик");
                 OnClick();
+            }
             else if (Input.GetMouseButtonDown(1))
+            {
+                Debug.Log("Флаг");
                 SetFlag();
+            }
         }
 
-        public void Initialize(CharacterOnBoard characterOnBoard, TileSpritesData tileSpritesData, Board board)
+        public void Construct(CharacterOnBoard characterOnBoard, TileSpritesDataConfig tileSpritesDataConfig,
+            CharacterStatsView characterStatsView, PlayerDataLevel playerDataLevel)
         {
-            _spriteRenderer = GetComponent<SpriteRenderer>();
+            _playerDataLevel = playerDataLevel;
             _characterOnBoard = characterOnBoard;
+            _tileSpritesDataConfig = tileSpritesDataConfig;
+            _characterStatsView = characterStatsView;
+        }
+
+        public void Initialize(Board board)
+        {
             _board = board;
             IsMine = false;
             IsFlagged = false;
             CanBeClicked = true;
-            _unclickedTile = tileSpritesData.GetRandomUnclickedTile();
-            _spriteRenderer.sprite = _unclickedTile;
-            _mineHitTile = tileSpritesData.MineHitTile;
-            _mineTile = tileSpritesData.MineTile;
-            _mineWrongTile = tileSpritesData.MineWrongTile;
-            _flaggedTile = tileSpritesData.FlaggedTile;
-            _unclickedTiles = tileSpritesData.UnclickedTiles;
-            _clickedTiles = tileSpritesData.ClickedTiles;
-            _backGroundSpriteRenderer.sprite = tileSpritesData.GetRandomBackgroundTile();
-            _characterStatsView = ServiceLocator.Get<CharacterStatsView>();
+            _unclickedTile = _tileSpritesDataConfig.GetRandomUnclickedTile();
+            _foregroundSpriteRenderer.sprite = _unclickedTile;
+            _mineHitTile = _tileSpritesDataConfig.MineHitTile;
+            _mineTile = _tileSpritesDataConfig.MineTile;
+            _mineWrongTile = _tileSpritesDataConfig.MineWrongTile;
+            _flaggedTile = _tileSpritesDataConfig.FlaggedTile;
+            _unclickedTiles = _tileSpritesDataConfig.UnclickedTiles;
+            _clickedTiles = _tileSpritesDataConfig.ClickedTiles;
+            _backGroundSpriteRenderer.sprite = _tileSpritesDataConfig.GetRandomBackgroundTile();
+            _flagSpriteRenderer.gameObject.SetActive(false);
         }
 
         public void SetMine(bool value)
@@ -75,8 +89,8 @@ namespace HentaiGame
 
             CanBeClicked = false;
 
-            _spriteRenderer.sprite = _clickedTiles[index: MineCount];
-            _foregroundSpriteRenderer.enabled = false;
+            _foregroundSpriteRenderer.sprite = _clickedTiles[index: MineCount];
+            // _foregroundSpriteRenderer.enabled = false;
             _backGroundSpriteRenderer.enabled = true;
             _characterStatsView.DecreaseTurns();
         }
@@ -92,9 +106,9 @@ namespace HentaiGame
             {
                 CanBeClicked = false;
                 if (IsMine & !IsFlagged)
-                    _spriteRenderer.sprite = _mineTile;
+                    _foregroundSpriteRenderer.sprite = _mineTile;
                 else if (IsFlagged & !IsMine)
-                    _spriteRenderer.sprite = _mineWrongTile;
+                    _foregroundSpriteRenderer.sprite = _mineWrongTile;
             }
         }
 
@@ -103,7 +117,7 @@ namespace HentaiGame
             if (IsMine)
             {
                 IsFlagged = true;
-                _spriteRenderer.sprite = _flaggedTile;
+                _foregroundSpriteRenderer.sprite = _flaggedTile;
             }
         }
 
@@ -111,15 +125,17 @@ namespace HentaiGame
         {
             if (!IsFlagged)
             {
-                if (_characterStatsView.PlayerDataLevel.Flags <= 0)
+                if (_playerDataLevel.Flags <= 0)
                     return;
                 _characterStatsView.DecreaseFlags();
-                _spriteRenderer.sprite = _flaggedTile;
+                // _flagSpriteRenderer.sprite = _flaggedTile;
+                _flagSpriteRenderer.gameObject.SetActive(true);
                 IsFlagged = true;
             }
             else
             {
-                _spriteRenderer.sprite = _unclickedTile;
+                _flagSpriteRenderer.gameObject.SetActive(false);
+                // _flagSpriteRenderer.sprite = _unclickedTile;
                 _characterStatsView.IncreaseFlags();
                 IsFlagged = false;
             }
@@ -160,7 +176,7 @@ namespace HentaiGame
 
         private void Booom()
         {
-            _spriteRenderer.sprite = _mineHitTile;
+            _foregroundSpriteRenderer.sprite = _mineHitTile;
             CanBeClicked = false;
             _characterStatsView.DecreaseTurns();
             _characterStatsView.DecreaseHp();

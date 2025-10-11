@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace HentaiGame
 {
@@ -14,12 +15,6 @@ namespace HentaiGame
         private PlayerDataPersistance _playerDataPersistance;
         private SaveManager _saveManager;
 
-        private void Start()
-        {
-            _changeSceneService = ServiceLocator.Get<ChangeSceneService>();
-            _saveManager = ServiceLocator.Get<SaveManager>();
-        }
-
         private void OnEnable()
         {
             _newRunButton.onClick.AddListener(call: StartGame);
@@ -28,6 +23,13 @@ namespace HentaiGame
         private void OnDisable()
         {
             _newRunButton.onClick.RemoveListener(call: StartGame);
+        }
+
+        [Inject]
+        private void Construct(ChangeSceneService changeSceneService, SaveManager saveManager)
+        {
+            _saveManager = saveManager;
+            _changeSceneService = changeSceneService;
         }
 
 

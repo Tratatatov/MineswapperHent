@@ -2,19 +2,10 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour, IPausable
 {
-    public static SoundManager Instance;
-
     [SerializeField] private SoundsConfig _soundsConfig;
     [SerializeField] private AudioSource _mainSoundtrack;
     [SerializeField] private AudioSource _sfxSource;
 
-    private void Awake()
-    {
-        if (Instance != null)
-            Destroy(this);
-        Instance = this;
-        DontDestroyOnLoad(this);
-    }
 
     public void SetPause()
     {
@@ -60,10 +51,3 @@ public class SoundManager : MonoBehaviour, IPausable
         
     }
 }
-
-public interface IPausable
-{
-    void SetPause();
-    void UnPause();
-}
-
