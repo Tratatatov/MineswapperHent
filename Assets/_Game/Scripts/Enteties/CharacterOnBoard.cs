@@ -4,13 +4,11 @@ namespace HentaiGame
 {
     public class CharacterOnBoard : MonoBehaviour
     {
+        [SerializeField] private SpriteRenderer _spriteRenderer;
         private Vector2 _position;
-        private SpriteRenderer _spriteRenderer;
 
-        public void Initialize(SpriteRenderer characterSpriteRenderer, Sprite miniIconSprite)
+        private void Start()
         {
-            _spriteRenderer = characterSpriteRenderer;
-            _spriteRenderer.sprite = miniIconSprite;
             Activate(false);
         }
 

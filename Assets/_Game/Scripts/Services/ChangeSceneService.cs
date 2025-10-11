@@ -7,12 +7,12 @@ namespace HentaiGame
     {
         public void GoToMainMenu()
         {
-            SceneManager.LoadScene(sceneBuildIndex: SceneConsts.MainMenu);
+            SceneManager.LoadScene(sceneName: SceneNameConstants.MainMenu);
         }
 
         public void GoToPerksScene()
         {
-            SceneManager.LoadScene(sceneBuildIndex: SceneConsts.Perks);
+            SceneManager.LoadScene(sceneName: SceneNameConstants.PerksMenu);
         }
 
         public void GoToLevel(int level)
@@ -23,7 +23,7 @@ namespace HentaiGame
         public void GoToNextLevel()
         {
             if (
-                SceneManager.GetActiveScene().buildIndex != SceneManager.sceneCountInBuildSettings - 3)
+                SceneManager.GetActiveScene().buildIndex != SceneManager.sceneCountInBuildSettings - 2)
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             else
                 Debug.Log("Ты победил, молодец!");
@@ -34,10 +34,4 @@ namespace HentaiGame
             SceneManager.LoadScene(sceneBuildIndex: SceneManager.GetActiveScene().buildIndex);
         }
     }
-}
-
-public class SceneConsts
-{
-    public const int MainMenu = 0;
-    public const int Perks = 1;
 }

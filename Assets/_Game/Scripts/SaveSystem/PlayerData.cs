@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HentaiGame
@@ -7,22 +6,21 @@ namespace HentaiGame
     [Serializable]
     public class PlayerData
     {
-        private readonly List<string> _dataNames = new()
-        {
-            DataName.MaxHP,
-            DataName.Coins,
-            DataName.HPRegen,
-            DataName.HP,
-            DataName.MaxTurns,
-            DataName.Level
-        };
+        public bool Check;
 
-        private readonly PlayerDefaultStatsConfig _playerDefaultStatsConfig;
+        private PlayerDefaultStatsConfig _playerDefaultStatsConfig;
 
         public PlayerData(PlayerDefaultStatsConfig playerDefaultStatsConfig)
         {
             _playerDefaultStatsConfig = playerDefaultStatsConfig;
         }
+
+
+        // [Inject]
+        // public void Construct(PlayerDefaultStatsConfig playerDefaultStatsConfig)
+        // {
+        //     _playerDefaultStatsConfig = playerDefaultStatsConfig;
+        // }
 
 
         public int Load(string dataName)

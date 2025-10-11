@@ -1,10 +1,18 @@
+using System;
+using UnityEngine;
+using Zenject;
+
 namespace HentaiGame
 {
+    [Serializable]
     public class SaveManager
     {
-        private PlayerData _playerData;
-        private PlayerDataPersistance _playerDataPersistance;
+        public bool Check;
 
+        [SerializeField] private PlayerData _playerData;
+        [SerializeField] private PlayerDataPersistance _playerDataPersistance;
+
+        [Inject]
         public SaveManager(PlayerDataPersistance playerDataPersistance, PlayerData playerData)
         {
             _playerDataPersistance = playerDataPersistance;
@@ -21,6 +29,13 @@ namespace HentaiGame
             _playerData.Save(dataName: DataName.HPRegen, value: _playerDataPersistance.HPRegen);
         }
 
+        public void SaveBetweenLevel(PlayerDataLevel playerDataLevel)
+        {
+            _playerDataPersistance.HP = playerDataLevel.HP;
+            _playerDataPersistance.Coins = playerDataLevel.Coins;
+            _playerDataPersistance.Level++;
+        }
+
 
         public void LoadAll()
         {
@@ -31,6 +46,15 @@ namespace HentaiGame
             _playerDataPersistance.HPRegen = _playerData.Load(dataName: DataName.HPRegen);
             _playerDataPersistance.Level = _playerData.Load(dataName: DataName.Level);
         }
+        // public void LoadAll()
+        // {
+        //     _playerDataPersistance.Coins = 0;
+        //     _playerDataPersistance.MaxHP = 0;
+        //     _playerDataPersistance.HP = 0;
+        //     _playerDataPersistance.MaxTurns = 0;
+        //     _playerDataPersistance.HPRegen = 0;
+        //     _playerDataPersistance.Level = 0;
+        // }
 
         public void Reset()
         {

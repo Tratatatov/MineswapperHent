@@ -26,7 +26,7 @@ namespace DarkHex.InspectorSpriteDrawer
                         spriteRect.width / tex.width,
                         spriteRect.height / tex.height
                     );
-                    Rect previewRect = new Rect(position.x, position.y + EditorGUIUtility.singleLineHeight + 2, 50, 50);
+                    Rect previewRect = new Rect(position.x, position.y + EditorGUIUtility.singleLineHeight + 2, 100, 100);
                     GUI.DrawTextureWithTexCoords(previewRect, tex, uv, true);
                 }
             }
@@ -39,7 +39,7 @@ namespace DarkHex.InspectorSpriteDrawer
             float height = EditorGUIUtility.singleLineHeight;
             if (property.objectReferenceValue != null)
             {
-                height += 2 + 50;
+                height += 2 + 100;
             }
             return height;
         }

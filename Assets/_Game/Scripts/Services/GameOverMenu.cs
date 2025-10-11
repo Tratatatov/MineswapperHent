@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace HentaiGame
 {
@@ -21,7 +22,8 @@ namespace HentaiGame
             _goToMainMenu.onClick.RemoveListener(call: _changeSceneService.GoToMainMenu);
         }
 
-        public void Initialize(ChangeSceneService changeSceneService)
+        [Inject]
+        private void Initialize(ChangeSceneService changeSceneService)
         {
             _changeSceneService = changeSceneService;
         }

@@ -14,7 +14,7 @@ namespace HentaiGame
 
         private Coroutine _damageEffectCoroutine;
 
-
+        
         public CharacterImages(CharacterImagesReferences characterImagesReferences,
             CharacterSpritesConfig characterSpritesConfig, float animationSpeed,
             MonoBehaviour coroutineStarter)

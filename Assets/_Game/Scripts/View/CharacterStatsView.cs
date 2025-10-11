@@ -1,6 +1,7 @@
 using HentaiGame;
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 public class CharacterStatsView : MonoBehaviour
 {
@@ -9,56 +10,63 @@ public class CharacterStatsView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _levelText;
     [SerializeField] private TextMeshProUGUI _flagsText;
     [SerializeField] private TextMeshProUGUI _turnsText;
-    private PlayerDataPersistance _playerDataPersistance;
 
-    public PlayerDataLevel PlayerDataLevel { get; private set; }
+    private PlayerDataLevel _playerDataLevel;
+    // private PlayerDataPersistance _playerDataPersistance;
 
-    private void Start()
+    // [Inject]
+    // private void Construct(PlayerDataLevel playerDataLevel, PlayerDataPersistance playerDataPersistance)
+    // {
+    //     _playerDataLevel = playerDataLevel;
+    //     _playerDataPersistance = playerDataPersistance;
+    //     UpdateStatsText();
+    // }
+    [Inject]
+    private void Construct(PlayerDataLevel playerDataLevel, PlayerDataPersistance playerDataPersistance)
     {
-        PlayerDataLevel = ServiceLocator.Get<PlayerDataLevel>();
-        _playerDataPersistance = ServiceLocator.Get<PlayerDataPersistance>();
+        _playerDataLevel = playerDataLevel;
         UpdateStatsText();
     }
 
     public void DecreaseTurns()
     {
-        PlayerDataLevel.Turns--;
+        _playerDataLevel.Turns--;
         UpdateStatsText();
-        if (PlayerDataLevel.Turns <= 0) GameEvents.OnTurnOver?.Invoke();
+        if (_playerDataLevel.Turns <= 0) GameEvents.OnTurnOver?.Invoke();
     }
 
     public void DecreaseHp()
     {
-        _playerDataPersistance.HP--;
+        _playerDataLevel.HP--;
         UpdateStatsText();
-        if (_playerDataPersistance.HP <= 0) GameEvents.OnGameOver?.Invoke();
+        if (_playerDataLevel.HP <= 0) GameEvents.OnGameOver?.Invoke();
     }
 
 
     public void InscreaseHp()
     {
-        _playerDataPersistance.HP++;
+        _playerDataLevel.HP++;
         UpdateStatsText();
     }
 
     public void IncreaseFlags()
     {
-        PlayerDataLevel.Flags++;
+        _playerDataLevel.Flags++;
         UpdateStatsText();
     }
 
     public void DecreaseFlags()
     {
-        PlayerDataLevel.Flags--;
+        _playerDataLevel.Flags--;
         UpdateStatsText();
     }
 
     private void UpdateStatsText()
     {
-        _turnsText.text = $"Turns: {PlayerDataLevel.Turns}";
-        _flagsText.text = $"Flags: {PlayerDataLevel.Flags}";
-        _coinsText.text = $"Coins: {_playerDataPersistance.Coins}";
-        _levelText.text = $"Level: {_playerDataPersistance.Level}";
-        _hpText.text = $"HP: {_playerDataPersistance.HP}";
+        _turnsText.text = $"Turns: {_playerDataLevel.Turns}";
+        _flagsText.text = $"Flags: {_playerDataLevel.Flags}";
+        _coinsText.text = $"Coins: {_playerDataLevel.Coins}";
+        _levelText.text = $"Level: {_playerDataLevel.Level}";
+        _hpText.text = $"HP: {_playerDataLevel.HP}";
     }
 }

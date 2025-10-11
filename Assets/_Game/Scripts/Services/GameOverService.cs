@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 namespace HentaiGame
 {
@@ -6,16 +7,29 @@ namespace HentaiGame
     {
         [SerializeField] private GameOverScreen _gameOverScreen;
 
-        public void Initialize()
+        public bool IsGameOver { get; private set; }
+
+        private void OnEnable()
+        {
+            GameEvents.OnGameOver += GameOver;
+        }
+
+        private void OnDisable()
+        {
+            GameEvents.OnGameOver -= GameOver;
+        }
+
+        [Inject]
+        private void Construct()
         {
             _gameOverScreen.gameObject.SetActive(false);
-            GameEvents.OnGameOver += GameOver;
+            IsGameOver = false;
         }
 
         private void GameOver()
         {
             _gameOverScreen.gameObject.SetActive(true);
-            GlobalState.GameState = GameState.GameOver;
+            IsGameOver = true;
         }
     }
 }
