@@ -6,7 +6,9 @@ namespace HentaiGame
     {
         public static Action OnGameOver;
         public static Action OnPlayerTurnsOver;
-        public static Action OnTurnOver;
+        public static Action OnTurnsOver;
+        public static Action OnScenesOver;
+        public static Action OnCoinsIsNotEnought;
 
         public static Action OnTurnsChanged;
         public static Action OnFlagsChanged; //TODO:??

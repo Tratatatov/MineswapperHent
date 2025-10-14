@@ -12,15 +12,9 @@ public class CharacterStatsView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _turnsText;
 
     private PlayerDataLevel _playerDataLevel;
-    // private PlayerDataPersistance _playerDataPersistance;
 
-    // [Inject]
-    // private void Construct(PlayerDataLevel playerDataLevel, PlayerDataPersistance playerDataPersistance)
-    // {
-    //     _playerDataLevel = playerDataLevel;
-    //     _playerDataPersistance = playerDataPersistance;
-    //     UpdateStatsText();
-    // }
+    public int HP => _playerDataLevel.HP;
+
     [Inject]
     private void Construct(PlayerDataLevel playerDataLevel, PlayerDataPersistance playerDataPersistance)
     {
@@ -32,7 +26,7 @@ public class CharacterStatsView : MonoBehaviour
     {
         _playerDataLevel.Turns--;
         UpdateStatsText();
-        if (_playerDataLevel.Turns <= 0) GameEvents.OnTurnOver?.Invoke();
+        if (_playerDataLevel.Turns <= 0) GameEvents.OnTurnsOver?.Invoke();
     }
 
     public void DecreaseHp()
@@ -42,6 +36,26 @@ public class CharacterStatsView : MonoBehaviour
         if (_playerDataLevel.HP <= 0) GameEvents.OnGameOver?.Invoke();
     }
 
+    public void DecreaseHp(int count)
+    {
+        _playerDataLevel.HP -= count;
+        if (_playerDataLevel.HP <= 0)
+        {
+            _playerDataLevel.HP = 0;
+            GameEvents.OnGameOver?.Invoke();
+            UpdateStatsText();
+        }
+
+        UpdateStatsText();
+    }
+
+    public void DecreaseCoins(int count)
+    {
+        _playerDataLevel.Coins -= count;
+        if (_playerDataLevel.Coins <= 0) GameEvents.OnCoinsIsNotEnought?.Invoke();
+
+        UpdateStatsText();
+    }
 
     public void InscreaseHp()
     {
@@ -68,5 +82,11 @@ public class CharacterStatsView : MonoBehaviour
         _coinsText.text = $"Coins: {_playerDataLevel.Coins}";
         _levelText.text = $"Level: {_playerDataLevel.Level}";
         _hpText.text = $"HP: {_playerDataLevel.HP}";
+    }
+
+    public void IncreaseCoins(int count)
+    {
+        _playerDataLevel.Coins += count;
+        UpdateStatsText();
     }
 }

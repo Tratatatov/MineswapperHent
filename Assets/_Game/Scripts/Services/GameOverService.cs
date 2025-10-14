@@ -7,7 +7,7 @@ namespace HentaiGame
     {
         [SerializeField] private GameOverScreen _gameOverScreen;
 
-        public bool IsGameOver { get; private set; }
+        public bool IsGameOver { get; set; }
 
         private void OnEnable()
         {

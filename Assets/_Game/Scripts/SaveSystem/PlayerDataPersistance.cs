@@ -15,6 +15,23 @@ namespace HentaiGame
         public void RestartLevel()
         {
         }
+
+            // public void DecreaseHp(int amount)
+            // {
+            //     
+            // }
+            // public void DecreaseHp(int amount)
+            // {
+            //     
+            // }
+            // public void DecreaseHp(int amount)
+            // {
+            //     
+            // }
+            // public void DecreaseHp(int amount)
+            // {
+            //     
+            // }
         
     }
 }

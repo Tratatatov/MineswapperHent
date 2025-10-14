@@ -3,13 +3,11 @@ using System.Linq;
 using HentaiGame;
 using UnityEngine;
 
-
 public class Board
 {
-    private readonly int _width;
     private readonly int _height;
     private readonly int _numMines;
-    private readonly List<Tile> _tiles;
+    private readonly int _width;
     private CharacterOnBoard _characterOnBoard;
 
     // Конструктор: принимает только готовый список тайлов (чистая логика)
@@ -18,32 +16,55 @@ public class Board
         _width = width;
         _height = height;
         _numMines = numMines;
-        _tiles = tiles;
+        Tiles = tiles;
     }
+
+    public List<Tile> Tiles { get; }
 
     // Логика игры (мины, клики и т.д.) — без создания объектов
     public void ResetGameState()
     {
         // Randomly shuffle the tile positions to get indices for mine positions.
-        int[] minePositions = Enumerable.Range(0, _tiles.Count).OrderBy(x => Random.Range(0.0f, 1.0f)).ToArray();
+        int[] minePositions = Enumerable.Range(0, count: Tiles.Count).OrderBy(x => Random.Range(0.0f, 1.0f)).ToArray();
 
         // Set mines at the first numMines positions.
         for (int i = 0; i < _numMines; i++)
         {
             int pos = minePositions[i];
-            _tiles[pos].SetMine(true);
+            Tiles[index: pos].SetMine(true);
         }
 
         // Update all the tiles to hold the correct number of mines.
-        for (int i = 0; i < _tiles.Count; i++)
-            _tiles[i].SetMineCount(HowManyMines(i));
+        for (int i = 0; i < Tiles.Count; i++)
+            Tiles[index: i].SetMineCount(HowManyMines(location: i));
     }
+
+    public List<Tile> GetOpenedMineTiles()
+    {
+        List<Tile> mineTiles = new();
+        foreach (Tile tile in Tiles)
+            if (tile.IsMine && tile.IsFlagged)
+                mineTiles.Add(item: tile);
+
+        return mineTiles;
+    }
+
+    public List<Tile> GetClosedMineTiles()
+    {
+        List<Tile> mineTiles = new();
+        foreach (Tile tile in Tiles)
+            if (tile.IsMine && !tile.IsFlagged)
+                mineTiles.Add(item: tile);
+
+        return mineTiles;
+    }
+
 
     private int HowManyMines(int location)
     {
         int count = 0;
-        foreach (int pos in GetNeighbours(location))
-            if (_tiles[pos].IsMine)
+        foreach (int pos in GetNeighbours(pos: location))
+            if (Tiles[index: pos].IsMine)
                 count++;
         return count;
     }
@@ -75,9 +96,9 @@ public class Board
 
     public void ClickNeighbours(Tile tile)
     {
-        int location = _tiles.IndexOf(tile);
-        foreach (int pos in GetNeighbours(location))
-            _tiles[pos].OpenRecursive();
+        int location = Tiles.IndexOf(item: tile);
+        foreach (int pos in GetNeighbours(pos: location))
+            Tiles[index: pos].OpenRecursive();
     }
 }
 

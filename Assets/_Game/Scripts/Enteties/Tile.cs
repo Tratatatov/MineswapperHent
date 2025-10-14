@@ -95,6 +95,25 @@ namespace HentaiGame
             _characterStatsView.DecreaseTurns();
         }
 
+        public void ShowMineHit()
+        {
+            _foregroundSpriteRenderer.sprite = _mineHitTile;
+            _backGroundSpriteRenderer.enabled = true;
+        }
+
+        public void ShowMineSafe()
+        {
+            _foregroundSpriteRenderer.sprite = _mineTile;
+            _backGroundSpriteRenderer.enabled = true;
+        }
+
+        public void ShowEmpty()
+        {
+            _foregroundSpriteRenderer.sprite = _clickedTiles[index: MineCount];
+            _backGroundSpriteRenderer.enabled = true;
+        }
+
+
         public void SetMineCount(int value)
         {
             MineCount = value;

@@ -23,10 +23,15 @@ namespace HentaiGame
         public void GoToNextLevel()
         {
             if (
-                SceneManager.GetActiveScene().buildIndex != SceneManager.sceneCountInBuildSettings - 2)
+                SceneManager.GetActiveScene().buildIndex != SceneManager.sceneCountInBuildSettings - 1)
+            {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            }
             else
+            {
                 Debug.Log("Ты победил, молодец!");
+                GameManager.Instance.ActivateFinalScreen();
+            }
         }
 
         public void ResetLevel()
