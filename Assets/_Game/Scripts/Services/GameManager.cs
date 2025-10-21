@@ -47,7 +47,7 @@ namespace HentaiGame
             {
                 _nextLevelPanel.gameObject.SetActive(true);
                 _characterStatsView.IncreaseCoins(Board.GetOpenedMineTiles().Count);
-                _characterStatsView.DecreaseHp();
+                    // _characterStatsView.DecreaseHp();
                 _saveManager.SaveBetweenLevel(playerDataLevel: _playerDataLevel);
             }
         }
