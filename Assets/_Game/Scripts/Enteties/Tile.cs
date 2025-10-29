@@ -21,7 +21,6 @@ namespace HentaiGame
         private Sprite _mineWrongTile;
         private PlayerDataLevel _playerDataLevel;
         private Sprite _unclickedTile;
-
         private List<Sprite> _unclickedTiles;
 
         public bool IsOpened { get; }
@@ -33,6 +32,8 @@ namespace HentaiGame
         public bool IsMine { get; private set; }
 
         public int MineCount { get; private set; }
+
+        public bool CanGetDamage { get; private set; } 
 
         private void OnMouseOver()
         {
@@ -63,6 +64,7 @@ namespace HentaiGame
         {
             _board = board;
             IsMine = false;
+            CanGetDamage = true;
             IsFlagged = false;
             CanBeClicked = true;
             _unclickedTile = _tileSpritesDataConfig.GetRandomUnclickedTile();
@@ -197,6 +199,7 @@ namespace HentaiGame
         {
             _foregroundSpriteRenderer.sprite = _mineHitTile;
             CanBeClicked = false;
+            CanGetDamage = false;
             _characterStatsView.DecreaseTurns();
             _characterStatsView.DecreaseHp();
         }

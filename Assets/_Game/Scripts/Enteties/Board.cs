@@ -53,7 +53,7 @@ public class Board
     {
         List<Tile> mineTiles = new();
         foreach (Tile tile in Tiles)
-            if (tile.IsMine && !tile.IsFlagged)
+            if (tile.IsMine && !tile.IsFlagged && tile.CanGetDamage)
                 mineTiles.Add(item: tile);
 
         return mineTiles;
