@@ -15,5 +15,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _width: 7
   _height: 7
-  _numMines: 6
+  _numMines: 1
   _coinsCount: 0

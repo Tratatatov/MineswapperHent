@@ -884,7 +884,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 157bb6d65b554e8a8bfb7e9c241aaf6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _boardConfig: {fileID: 11400000, guid: 4234c3f86551d02418a33ec249759599, type: 2}
+  _boardConfig: {fileID: 11400000, guid: c62df54db737d954db35079974afa6f2, type: 2}
   _characterOnBoard: {fileID: 6644852248059603389}
   _gameOverService: {fileID: 958920216}
   _tileSpritesConfig: {fileID: 11400000, guid: 3c5576e81d94569449d997e590b1bedc, type: 2}

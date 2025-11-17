@@ -27,6 +27,7 @@ public class CharacterStatsView : MonoBehaviour
         _playerDataLevel.Turns--;
         UpdateStatsText();
         if (_playerDataLevel.Turns <= 0) GameEvents.OnTurnsOver?.Invoke();
+        // _board.CheckForLevelComplete();
     }
 
     public void DecreaseHp()

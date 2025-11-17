@@ -3,17 +3,19 @@ using UnityEngine;
 
 namespace HentaiGame
 {
-    [RequireComponent(typeof(SpriteRenderer))]
     public class Tile : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer _backGroundSpriteRenderer;
         [SerializeField] private SpriteRenderer _flagSpriteRenderer;
         [SerializeField] private TileSpritesDataConfig _tileSpritesDataConfig;
         [SerializeField] private SpriteRenderer _foregroundSpriteRenderer;
+
         private Sprite _backgroundTile;
+
         private Board _board;
         private CharacterOnBoard _characterOnBoard;
         private CharacterStatsView _characterStatsView;
+
         private List<Sprite> _clickedTiles;
         private Sprite _flaggedTile;
         private Sprite _mineHitTile;
@@ -23,32 +25,13 @@ namespace HentaiGame
         private Sprite _unclickedTile;
         private List<Sprite> _unclickedTiles;
 
-        public bool IsOpened { get; }
-
-        public bool IsFlagged { get; private set; }
-
-        public bool CanBeClicked { get; private set; }
-
-        public bool IsMine { get; private set; }
-
-        public int MineCount { get; private set; }
-
-        public bool CanGetDamage { get; private set; } 
-
         private void OnMouseOver()
         {
             if (GameManager.Instance.GameOverService.IsGameOver || !CanBeClicked) return;
 
-            if (Input.GetMouseButton(0))
-            {
-                Debug.Log("Клик");
-                OnClick();
-            }
-            else if (Input.GetMouseButtonDown(1))
-            {
-                Debug.Log("Флаг");
-                SetFlag();
-            }
+            if (Input.GetMouseButton(0)) OnClick();
+
+            if (Input.GetMouseButtonDown(1)) SetFlag();
         }
 
         public void Construct(CharacterOnBoard characterOnBoard, TileSpritesDataConfig tileSpritesDataConfig,
@@ -92,9 +75,11 @@ namespace HentaiGame
             CanBeClicked = false;
 
             _foregroundSpriteRenderer.sprite = _clickedTiles[index: MineCount];
-            // _foregroundSpriteRenderer.enabled = false;
             _backGroundSpriteRenderer.enabled = true;
             _characterStatsView.DecreaseTurns();
+
+            // Уведомляем Board об открытии тайла
+            _board.OnTileOpened(this);
         }
 
         public void ShowMineHit()
@@ -149,19 +134,16 @@ namespace HentaiGame
                 if (_playerDataLevel.Flags <= 0)
                     return;
                 _characterStatsView.DecreaseFlags();
-                // _flagSpriteRenderer.sprite = _flaggedTile;
                 _flagSpriteRenderer.gameObject.SetActive(true);
                 IsFlagged = true;
             }
             else
             {
                 _flagSpriteRenderer.gameObject.SetActive(false);
-                // _flagSpriteRenderer.sprite = _unclickedTile;
                 _characterStatsView.IncreaseFlags();
                 IsFlagged = false;
             }
         }
-
 
         public void OpenRecursive()
         {
@@ -171,7 +153,8 @@ namespace HentaiGame
             Open();
 
             // Если нет мин вокруг, открыть соседние тайлы рекурсивно
-            if (MineCount == 0 && !IsMine) _board.ClickNeighbours(this);
+            if (MineCount == 0 && !IsMine)
+                _board.ClickNeighbours(this);
         }
 
         public void OnClick()
@@ -185,9 +168,7 @@ namespace HentaiGame
                 Booom();
 
             else
-                //OpenRecursive();
                 Open();
-            //if (!CanBeClicked && MineCount > 0) _board.ExpandIfFlagged(this);
         }
 
         private bool CantBeClicked()
@@ -197,6 +178,7 @@ namespace HentaiGame
 
         private void Booom()
         {
+            print("boom!");
             _foregroundSpriteRenderer.sprite = _mineHitTile;
             CanBeClicked = false;
             CanGetDamage = false;
@@ -209,5 +191,21 @@ namespace HentaiGame
             _characterOnBoard.Activate(true);
             _characterOnBoard.MoveTo(this);
         }
+
+        #region Properties
+
+        public bool IsOpened { get; }
+
+        public bool IsFlagged { get; private set; }
+
+        public bool CanBeClicked { get; private set; }
+
+        public bool IsMine { get; private set; }
+
+        public int MineCount { get; private set; }
+
+        public bool CanGetDamage { get; private set; }
+
+        #endregion
     }
 }
