@@ -169,6 +169,8 @@ namespace HentaiGame
 
             else
                 Open();
+            HealAbility.Instance.TryToHeal(characterStatsView: _characterStatsView);
+            
         }
 
         private bool CantBeClicked()

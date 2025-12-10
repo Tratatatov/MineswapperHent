@@ -26,7 +26,7 @@ namespace HentaiGame
             _playerData.Save(dataName: DataName.Level, value: _playerDataPersistance.Level);
             _playerData.Save(dataName: DataName.HP, value: _playerDataPersistance.HP);
             _playerData.Save(dataName: DataName.MaxTurns, value: _playerDataPersistance.MaxTurns);
-            _playerData.Save(dataName: DataName.HPRegen, value: _playerDataPersistance.HPRegen);
+            _playerData.Save(dataName: DataName.HPRegen, value: _playerDataPersistance.HealTurns);
         }
 
         public void SaveBetweenLevel(PlayerDataLevel playerDataLevel)
@@ -43,7 +43,7 @@ namespace HentaiGame
             _playerDataPersistance.MaxHP = _playerData.Load(dataName: DataName.MaxHP);
             _playerDataPersistance.HP = _playerData.Load(dataName: DataName.HP);
             _playerDataPersistance.MaxTurns = _playerData.Load(dataName: DataName.MaxTurns);
-            _playerDataPersistance.HPRegen = _playerData.Load(dataName: DataName.HPRegen);
+            _playerDataPersistance.HealTurns = _playerData.Load(dataName: DataName.HPRegen);
             _playerDataPersistance.Level = _playerData.Load(dataName: DataName.Level);
         }
         // public void LoadAll()

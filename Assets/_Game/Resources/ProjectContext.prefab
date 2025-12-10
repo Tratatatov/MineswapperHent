@@ -76,3 +76,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _soundManager: {fileID: 4031651096782269008, guid: 0b3478cfc1c80784087d5563fdc5010e, type: 3}
   _playerDefaultStatsConfig: {fileID: 11400000, guid: 2b2447d3e8b635646bb40ca414df2fb9, type: 2}
+  _healingConfig: {fileID: 11400000, guid: 8bd31099cf0875b4c9defebb14ea8272, type: 2}

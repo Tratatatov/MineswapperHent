@@ -10,7 +10,7 @@ public class CharacterStatsView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _levelText;
     [SerializeField] private TextMeshProUGUI _flagsText;
     [SerializeField] private TextMeshProUGUI _turnsText;
-
+    [SerializeField] private TextMeshProUGUI _healText; //TODO
     private PlayerDataLevel _playerDataLevel;
 
     public int HP => _playerDataLevel.HP;
@@ -58,9 +58,11 @@ public class CharacterStatsView : MonoBehaviour
         UpdateStatsText();
     }
 
-    public void InscreaseHp()
+    public void InscreaseHp(int count)
     {
-        _playerDataLevel.HP++;
+        _playerDataLevel.HP += count;
+        if (_playerDataLevel.HP > _playerDataLevel.MaxHP) _playerDataLevel.HP = _playerDataLevel.MaxHP;
+
         UpdateStatsText();
     }
 
@@ -83,6 +85,7 @@ public class CharacterStatsView : MonoBehaviour
         _coinsText.text = $"Coins: {_playerDataLevel.Coins}";
         _levelText.text = $"Level: {_playerDataLevel.Level}";
         _hpText.text = $"HP: {_playerDataLevel.HP}";
+        // _healText.text = $"Heal: {_playerDataLevel.HealTurns}";
     }
 
     public void IncreaseCoins(int count)
@@ -90,4 +93,9 @@ public class CharacterStatsView : MonoBehaviour
         _playerDataLevel.Coins += count;
         UpdateStatsText();
     }
+
+    // public void ResetHealTurns()
+    // {
+    //     _healText = $"Heal: {0}";
+    // }
 }

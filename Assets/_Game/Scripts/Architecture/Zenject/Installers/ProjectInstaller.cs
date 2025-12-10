@@ -6,6 +6,7 @@ public class ProjectInstaller : MonoInstaller
 {
     [SerializeField] private SoundManager _soundManager;
     [SerializeField] private PlayerDefaultStatsConfig _playerDefaultStatsConfig;
+    [SerializeField] private HealingConfig _healingConfig;
     private ChangeSceneService _changeSceneService;
     private PlayerData _playerData;
     private PlayerDataPersistance _playerDataPersistance;
@@ -28,5 +29,6 @@ public class ProjectInstaller : MonoInstaller
         Container.Bind<SaveManager>().FromInstance(instance: _saveManager).AsSingle();
         Container.Bind<PlayerData>().FromInstance(instance: _playerData).AsSingle();
         Container.Bind<PlayerDataPersistance>().FromInstance(instance: _playerDataPersistance).AsSingle();
+        Container.Bind<HealingConfig>().FromInstance(instance: _healingConfig).AsSingle();
     }
 }

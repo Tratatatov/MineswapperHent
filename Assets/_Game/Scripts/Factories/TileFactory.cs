@@ -4,10 +4,10 @@ using Zenject;
 
 public class TileFactory
 {
-    private readonly Tile _tilePrefab;
     private readonly CharacterOnBoard _characterOnBoard;
     private readonly CharacterStatsView _characterStatsView;
     private readonly PlayerDataLevel _playerDataLevel;
+    private readonly Tile _tilePrefab;
     private readonly TileSpritesDataConfig _tileSpritesDataConfig;
 
     [Inject]

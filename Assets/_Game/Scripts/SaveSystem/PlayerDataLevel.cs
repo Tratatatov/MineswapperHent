@@ -10,8 +10,10 @@ namespace HentaiGame
         public int Turns;
         public int Coins;
         public int HP;
-        public int HPRegen;
         public int Level;
+        public int HealTurns;
+        public int TurnsToHeal;
+        public int MaxHP;
 
         [Inject]
         public void Construct(PlayerDataPersistance playerDataPersistance, BoardConfig boardConfig)
@@ -20,8 +22,9 @@ namespace HentaiGame
             Flags = boardConfig.NumMines;
             Coins = playerDataPersistance.Coins;
             Level = playerDataPersistance.Level;
+            MaxHP = playerDataPersistance.MaxHP;
             HP = playerDataPersistance.HP;
-            HPRegen = playerDataPersistance.HPRegen;
+            HealTurns = playerDataPersistance.HealTurns;
         }
     }
 }

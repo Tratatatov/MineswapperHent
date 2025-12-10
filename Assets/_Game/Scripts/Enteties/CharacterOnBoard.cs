@@ -5,6 +5,7 @@ namespace HentaiGame
     public class CharacterOnBoard : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer _spriteRenderer;
+        [SerializeField] private HealEffect _healEffect;
         private Vector2 _position;
 
         private void Start()
@@ -24,6 +25,11 @@ namespace HentaiGame
                 _spriteRenderer.enabled = true;
             else
                 _spriteRenderer.enabled = false;
+        }
+
+        public void PlayHealEffect()
+        {
+            // _healEffect.Play();
         }
     }
 }
